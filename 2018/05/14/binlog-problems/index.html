@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/songshiqiang.github.io/img/favicon.ico">
+
+    <title>
+        
+          Binlog相关常见问题整理 - songshiqiang的博客 | songshiqiang&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http:/songshiqiang.github.io/2018/05/14/binlog-problems/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/songshiqiang.github.io/">songshiqiang&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/songshiqiang.github.io/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http:/songshiqiang.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/songshiqiang.github.io/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                        
+                          <a class="tag" href="/songshiqiang.github.io/tags/#binlog" title="binlog">binlog</a>
+                        
+                    </div>
+                    <h1>Binlog相关常见问题整理</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by songshiqiang on
+                        2018-05-14
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>MySQL高可用架构中，主库复制是非常常见的一种。当主库宕机后，可以提升一个从库作为新的主库，保证服务可用性；同时可以通过扩展从库，提高整个集群的QPS。在主从复制架构下，MySQL通过binlog来实现主从数据的一致性。</p>
+<p><img src="mysql-replication.png" alt="img"> </p>
+<p>如上图，MySQL主从复制主要有以下步骤  </p>
+<p>(1) master将改变记录到binary log中</p>
+<p>(2) slave io_thread去请求主库的binlog，并将得到的binlog日志写到relay log中</p>
+<p>(3) slave sql_thread重做relay log中的事件</p>
+<p>除了作为MySQL主从复制的纽带，binlog还有其他的作用。比如：</p>
+<ol>
+<li>通过mysqlbinlog工具解析binlog文件，来进行Point-in-Time数据库恢复；</li>
+<li>基于binlog事件，进行数据库的flashback（闪回）（mariadb可以直接使用mysqlbinlog进行flashback）</li>
+<li>Github开源的在线改表工具gh-ost也是通过binlog来实现的</li>
+<li>还可以通过解析binlog进行增量订阅&amp;消费</li>
+</ol>
+<p>binlog如此有用，但是在平日的运维过程中难免遇到一些问题。下面介绍几种binlog相关的错误。</p>
+<h2 id="常见问题一"><a href="#常见问题一" class="headerlink" title="常见问题一"></a><strong>常见</strong>问题一</h2><p><strong>现象：</strong></p>
+<p>mysqlbinlog5.5解析mysql5.7 binlog文件出现</p>
+<blockquote>
+<p>ERROR: Error in Log_event::read_log_event(): ‘Sanity check failed’, data_len: 31, event_type: 35ERROR: Could not read entry at offset 123: Error in log format or read error.</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<p>mysql5.6等高版本binlog文件增加了新的binlog event，如gtid event等。</p>
+<p>mysql5.5版本的mysqlbinlog是识别不了这样的binlog event的。</p>
+<p><strong>解决方法：</strong></p>
+<p>使用高版本的mysqlbinlog解析低版本的mysql产生的binlog</p>
+<h2 id="常见问题二"><a href="#常见问题二" class="headerlink" title="常见问题二"></a><strong>常见</strong>问题二</h2><p><strong>现象：</strong></p>
+<p>正常运行的mysql服务器show slave status出现</p>
+<blockquote>
+<p>Last_SQL_Error:Relay log read failure: Could not parse relay log event entry. The possible reasons are: the master’s binary log is corrupted (you can check this by running              ‘mysqlbinlog’ on the binary log), the slave’s relay log is corrupted (you can check this by running ‘mysqlbinlog’ on the relay log), a network problem, or a bug in the master’s or      slave’s MySQL code. If you want to check the master’s binary log or slave’s relay log, you will be able to know their names by issuing ‘SHOW SLAVE STATUS’ on this slave.</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<p>无法读取relay log 里的条目，可能因为master库的binlog错误，或slave库的中继日志错误，或者网络问题及bug原因。一般是由于网络故障或slave库压力过大，导致relay-log格式错误造成的。</p>
+<p><strong>解决方法：</strong></p>
+<p>找到当前已经同步的时间点，重新设置主从同步后，就会产生新的中继日志，恢复正常。</p>
+<p>从”show  slave  status\G”的输出中，找到如下信息：</p>
+<blockquote>
+<p>Relay_Master_Log_File: mysql-bin.002540     //slave库已读取的master的binlogExec_Master_Log_Pos: 950583017          //在slave上已经执行的position位置点</p>
+</blockquote>
+<p>停掉slave，以slave已经读取的binlog文件，和已经执行的position为起点，重新设置同步。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="literal">stop</span> <span class="literal">slave</span>;</span><br><span class="line">mysql&gt;change <span class="keyword">master</span> <span class="title">to</span> <span class="attr">master_log_file=</span>mysql-bin.<span class="number">002540</span>' ,<span class="attr">master_log_pos=</span><span class="number">950583017</span>;</span><br><span class="line">mysql&gt;<span class="literal">start</span> <span class="literal">slave</span>;</span><br></pre></td></tr></table></figure>
+<p>mysql&gt;stop slave;mysql&gt;change master to master_log_file=mysql-bin.002540’ ,master_log_pos=950583017;mysql&gt;start slave;</p>
+<h2 id="常见问题三"><a href="#常见问题三" class="headerlink" title="常见问题三"></a><strong>常见</strong>问题三</h2><p><strong>现象：</strong></p>
+<p>宕机之后恢复show slave status报错：</p>
+<blockquote>
+<p>Last_SQL_Error: Error initializing relay log position: I/O error reading the header from the binary logLast_SQL_Error: Error initializing relay log position: Binlog has bad magic number; It’s not a binary log file that can be used by this version of MySQL</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<p>宕机，例如电源故障、主板烧了等，或者非法关机，造成relay-bin文件损坏</p>
+<p> <strong>解决方法：</strong></p>
+<p>同问题二 。</p>
+<p>也可以设置relay_log_recovery = 1 。</p>
+<p>当slave从库宕机后，如果relay-log发生损坏，导致一部分中继日志没有处理，就自动放弃未执行的relay-log，重新从master上获取日志，完成了中继日志的恢复。</p>
+<h2 id="常见问题四"><a href="#常见问题四" class="headerlink" title="常见问题四"></a><strong>常见</strong>问题四</h2><p><strong>现象：</strong></p>
+<p>从库机器宕机重启后change master to时出现</p>
+<blockquote>
+<p>Error (Code 1201): Could not initialize master info structure; more error messages can be found in the MySQL error log</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>ERROR 1872 (HY000): Slave failed to initialize relay log info structure from the repository</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<p>宕机，例如电源故障、主板烧了等，或者非法关机，造成master.info或者realy-log.info文件损坏</p>
+<p><strong>解决方法：</strong></p>
+<p><code>slave&gt; reset slave all，</code></p>
+<p><code>重新change master to</code></p>
+<p><strong>预防措施：</strong></p>
+<p>配置文件设置</p>
+<p><code>relay_log_info_repository=table</code></p>
+<p><code>master_info_repository=table</code></p>
+<p>mysql5.6.5以前的版本mysql.slave_master_info和mysql.slave_relay_log_info的存储引擎是默认为MyISAM的，需要更改为InnoDB的存储引擎</p>
+<p><code>ALTER TABLE mysql.slave_master_info ENGINE=InnoDB;</code> </p>
+<p><code>ALTER TABLE mysql.slave_relay_log_info ENGINE=InnoDB;</code></p>
+<p>mysql.slave_master_info 表将在<strong>sync_master_info</strong> 个events后被更新 。</p>
+<p>mysql.slave_relay_log_info表将在每个事务commit时被更新 。</p>
+<h2 id="常见问题五"><a href="#常见问题五" class="headerlink" title="常见问题五"></a><strong>常见</strong>问题五</h2><p><strong>现象：</strong></p>
+<p>主从原来binlog_format都是statement，将主库binlog_format改为row后，从库show slave status出现：</p>
+<blockquote>
+<p>Last_Error: Error executing row event: ‘Cannot execute statement: impossible to write to binary log since statement is in row format and BINLOG_FORMAT = STATEMENT.’</p>
+</blockquote>
+<p> <strong>原因分析</strong>：</p>
+<p>主库binlog_format是row，从库binlog_format是statement时，会出现上面的报错 。</p>
+<p>但是主库binlog_format是statement，从库binlog_format是row；</p>
+<p>或者主库binlog_format是row，从库binlog_format是mixed就不会报错。</p>
+<blockquote>
+<p>If the your SQL thread is indeed configured withbinlog_format=STATEMENT once it receives a ROW event it will stop. Thereason is that it would be unable to log that ROW event in STATEMENTformat (sometimes we refer to this as ROW injection, which is either aBINLOG statement or a ROW event executed by the slave’s SQL thread)</p>
+</blockquote>
+<p>详细原因参考 <a href="https://bugs.mysql.com/bug.php?id=69095" target="_blank" rel="noopener">https://bugs.mysql.com/bug.php?id=69095</a></p>
+<p><strong>解决方法：</strong></p>
+<p><code>SLAVE&gt; STOP SLAVE;</code></p>
+<p><code>SLAVE&gt; SET GLOBAL binlog_format=MIXED;</code></p>
+<p><code>SLAVE&gt; START SLAVE;</code></p>
+<h2 id="常见问题六"><a href="#常见问题六" class="headerlink" title="常见问题六"></a><strong>常见</strong>问题六</h2><p><strong>现象：</strong></p>
+<p>mysql5.6同步mysql5.5时出错</p>
+<blockquote>
+<p>Last_IO_Error: Got fatal error 1236 from master when reading data from binary log: ‘Slave can not handle replication events with the checksum that master is configured to log; the first event ‘mysql-bin.000001’ at 4, the last event read from ‘mysql-bin.000001’ at 120, the last byte read from ‘mysql-bin.000001’ at 120.’</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<p>为了解决软硬件或者网络传输出错，导致主服务器上运行的sql语句与从服务器上运行的sql语句不一致(称为event corrupt)的问题，mysql5.6版本添加了replication event checksum功能 。当一个event被写入binary log的时候，checksum也同时写入binary log，然后在event通过网络传输到slave之后，再在slave上对其进行验证并写入slave的relay log 。由于每一步都记录了event和checksum，所以我们可以很快地找出问题所在 。</p>
+<p>mysql5.6.5以后的版本中binlog_checksum默认值是crc32,而之前的版本binlog_checksum默认值是none</p>
+<p><strong>解决方案：</strong></p>
+<p><code>Slave&gt; set global binlog_checksum=none</code></p>
+<h2 id="常见问题七"><a href="#常见问题七" class="headerlink" title="常见问题七"></a><strong>常见</strong>问题七</h2><p><strong>现象：</strong></p>
+<p>磁盘满了，手动清理binlog文件和mysql-bin.index文件后</p>
+<p>show binary logs为空</p>
+<p>但是show master status正常</p>
+<p><code>mysql&gt; show binary logs;</code></p>
+<p><code>Empty set (0.00 sec)</code></p>
+<p><code>mysql&gt;</code></p>
+<p> show master status;</p>
+<p><code>+------------------+-----------+--------------+------------------+| File             | Position  | Binlog_Do_DB | Binlog_Ignore_DB |</code></p>
+<p>+——————+———–+————–+——————+| </p>
+<p><code>mysql-bin.001385 | 987114584 |              |                  |</code></p>
+<p><code>+------------------+-----------+--------------+------------------+`</code></p>
+<p><strong>原因分析：</strong></p>
+<p>检查mysql-bin.index文件后，发现第一行空行 。</p>
+<p>在mysql源码rpl_master.cc:show_binlogs()有如下代码：</p>
+<p> <code>/* The file ends with EOF or empty line */</code></p>
+<p>  <code>while ((length=my_b_gets(index_file, fname, sizeof(fname))) &gt; 1)</code></p>
+<p>空行被认为是文件结束</p>
+<p>（参考<a href="https://yq.aliyun.com/articles/213657文章" target="_blank" rel="noopener">https://yq.aliyun.com/articles/213657文章</a> ）</p>
+<p><strong>解决方法：</strong></p>
+<p>删除mysql-bin.index文件中的空行；</p>
+<p><code>flush binary logs</code></p>
+<p><strong>预防措施：</strong></p>
+<p>   不要人工去删除binlog，不要人工编辑mysql-bin.index文件，除非你知道你在干什么，否者你就可能在给自己埋雷！</p>
+<p><strong>总结：</strong></p>
+<p>DBA需要关注MySQL的每个新版本对binlog都有那些改进(比如5.6版本添加的gtid 特性，5.7版本Enhanced Multi-threaded Slaves ) ,详细了解每个参数的含义，这样遇到错误知其意，解决问题才能顺手。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/songshiqiang.github.io/2018/06/10/mysql-lock/" data-toggle="tooltip" data-placement="top" title="MySQL锁文章相关汇总">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/songshiqiang.github.io/2018/04/14/Resource-temporarily-unavailable/" data-toggle="tooltip" data-placement="top" title="Resource-temporarily-unavailable">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                        
+                          <a class="tag" href="/songshiqiang.github.io/tags/#binlog" title="binlog">binlog</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">songshiqiang&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "sq892246139";
+    var disqus_identifier = "http:/2018/05/14/binlog-problems/";
+    var disqus_url = "http:/2018/05/14/binlog-problems/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/sq892246139">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/songshiqiang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; songshiqiang&#39;s Blog 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/songshiqiang.github.io/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/songshiqiang.github.io/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/songshiqiang.github.io/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http:/songshiqiang.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http:/songshiqiang.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

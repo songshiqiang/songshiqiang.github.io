@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/songshiqiang.github.io/img/favicon.ico">
+
+    <title>
+        
+          Linux内核太低导致机器性能下降10倍 - songshiqiang的博客 | songshiqiang&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http:/songshiqiang.github.io/2018/09/19/linux-low-kerner-version-problem/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/songshiqiang.github.io/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/songshiqiang.github.io/">songshiqiang&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/songshiqiang.github.io/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http:/songshiqiang.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/songshiqiang.github.io/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/songshiqiang.github.io/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                    <h1>Linux内核太低导致机器性能下降10倍</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by songshiqiang on
+                        2018-09-19
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>需求如下:</p>
+<p>需要将业务数据库集群从老集群切换到新集群</p>
+<p>切换后,发现业务的响应时间严重增加,业务可用性影响严重,然后就回滚了</p>
+<hr>
+<p>需要排查一下为什么业务响应时间增加了,我们通过日志排查发现sql执行时间边长</p>
+<p>下面是新老机器的配置,机器都是AWS的EC2，系统都是centos6.3</p>
+<table>
+<thead>
+<tr>
+<th>老从库A(2016年12月开通)</th>
+<th>新从库B(2018年4月开通)</th>
+<th>其他机器C(2018年3月开通)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8核   60G内存  SSD高效云盘</td>
+<td>36核   60G内存  SSD高效云盘</td>
+<td>36核   60G内存  SSD高效云盘</td>
+</tr>
+</tbody>
+</table>
+<p>很明显,新集群的机器配置要高于老集群的机器配置,但是为什么新机器的性能反而比老机器的性能差呢?</p>
+<hr>
+<p>刚开始我们怀疑是CPU性能有问题,然后在3台机器上分别进行如下测试</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time echo “scale=<span class="number">5000</span>; <span class="number">4</span>*a(<span class="number">1</span>)” | bc -l -q</span><br></pre></td></tr></table></figure>
+<p>但是发现新机器的性能比老机器的好</p>
+<hr>
+<p>然后我们使用sysbench进行压测</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> `seq <span class="number">1</span> <span class="number">10</span>`;<span class="built_in">do</span> echo $i;sysbench <span class="comment">--threads=8 --time=60 --test=cpu --cpu-max-prime=1000 run ;sleep 10;done |tee  sysbench_cpu.log     </span></span><br><span class="line"></span><br><span class="line">sysbench的输出信息如下：</span><br><span class="line">CPU speed:                                              </span><br><span class="line">    events per <span class="keyword">second</span>: <span class="number">12678.62</span>                         </span><br><span class="line">                                                        </span><br><span class="line">Throughput:                                             </span><br><span class="line">    events/s (eps):                      <span class="number">12678.6239</span>     </span><br><span class="line">    <span class="built_in">time</span> elapsed:                        <span class="number">60.0024</span>s       </span><br><span class="line">    total <span class="built_in">number</span> <span class="keyword">of</span> events:              <span class="number">760748</span>         </span><br><span class="line">                                                        </span><br><span class="line">Latency (ms):                                           </span><br><span class="line">         <span class="built_in">min</span>:                                    <span class="number">0.05</span>   </span><br><span class="line">         <span class="built_in">avg</span>:                                    <span class="number">0.28</span>   </span><br><span class="line">         <span class="built_in">max</span>:                                   <span class="number">25.65</span>   </span><br><span class="line">         <span class="number">95</span>th percentile:                        <span class="number">0.89</span>   </span><br><span class="line">         <span class="built_in">sum</span>:                               <span class="number">211122.44</span>   </span><br><span class="line">                                                        </span><br><span class="line">Threads fairness:                                       </span><br><span class="line">    events (<span class="built_in">avg</span>/stddev):           <span class="number">95093.5000</span>/<span class="number">48871.79</span>  </span><br><span class="line">    execution <span class="built_in">time</span> (<span class="built_in">avg</span>/stddev):   <span class="number">26.3903</span>/<span class="number">1.58</span></span><br></pre></td></tr></table></figure>
+<p>我们选取</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">events</span>/s (<span class="built_in">eps</span>):                      <span class="number">12678.6239</span></span><br></pre></td></tr></table></figure>
+<p>作为测试指标   </p>
+<p>压测结果如下:</p>
+<p><img src="CPU.jpg" alt="压测结果"></p>
+<p>可以看到之前机器的CPU性能是新开通机器CPU性能的10倍</p>
+<hr>
+<p>向AWS寻求帮助,为啥AWS EC2机器会有这种问题，最后得到的答复</p>
+<blockquote>
+<p>感謝您的耐心等候, 我統整了您所遭遇的 CPU/內存 性能問題如下：</p>
+<ol>
+<li>您發現在 c4.8xlage 上使用 sysbench 測試 CPU 性能時, 發現其成績較 r3.2xlarge 來得差.</li>
+<li>您發現在 c4.8xlage 上使用 sysbench 測試 內存 性能時, 發現其成績較 c4.4xlarge 來得差.</li>
+</ol>
+<p>之前針對您所遭遇的問題, 我作了相關的測試, 在將 kernel 升級至版本 2.6.32-696.28 以上後, c4.8xlarge 的性能表現能符合預期, 並建議您升級您的 kernel 版本.</p>
+<p>您考量到此 AMI 大量部署為您們的底層平台, 升級 OS 版本或是 kernel 會有不可預期的風險, 因此您想了解2版kernel間的差異或是有什麼方式可以在現有的 OS/kernel 版本下將性能提升.</p>
+<p>針對此問題我作了相關的研究及實驗如下:</p>
+<p>您的 r3.2xlarge 以及 c4.4xlarge 實例, 在系統中所使用的 clocksource 為 “tsc”, 在 c4.8xlarge 中 clocksource 為 “hpet”.</p>
+<p>在許多對延遲有要求的環境中, 使用 “tsc” 會有較好的性能表現, tsc 提供 userspace 的調用, 能減少系統調用時的上下文切換, 減少系統的延遲性.</p>
+<p>但您可能會有疑問, 為何在您原有的 kernel 2.6.32-279.23.1.mi5.el6.x86_64 中無法選擇使用 tsc 為 clocksource, tsc 甚至不在支持的列表中.</p>
+<p>我在c4.8xlarge 實例的 dmesg 中發現在您系統閒置的狀態下會使您的 tsc 時鐘遭到中斷, 使用 tsc 變的不穩定, 因此系統改使用 hpet 為 clocksource.</p>
+<p>[    4.344343] Switching to clocksource hpet<br>[    0.019999] Marking TSC unstable due to TSC halts in idle<br>[    5.604279] Switching to clocksource tsc<br>[    6.120973] Switching to clocksource hpet</p>
+<p>AWS 在部份特定的EC2實例上支持作業系統級別的 C-state 及 P-state 功能[1], c4.8xlarge 实例类型在支持列表中. </p>
+<p>c-state控制当核心处于空闲状态时可以进入的睡眠级别. c-state 从 C0 (最浅空闲状态，此时核心完全唤醒并在执行指令) 开始编号, 一直增进到 C6 (最深空闲状态，此时核心关闭).</p>
+<p>使用 turbostat, 我可以觀察到 c4.8xlarge 預設會啓用 c-state 並使CPU核心在閒置時休眠至 c6 的狀態.</p>
+<p>c4.8xlarge </p>
+<p>turbostat -i 1 –debug</p>
+<p>Package    Core     CPU Avg_MHz   %Busy Bzy_MHz TSC_MHz     SMI  CPU%c1  CPU%c3  CPU%c6  CPU%c7 Pkg%pc2 Pkg%pc3 PkgWatt RAMWatt   PKG_%   RAM_%<br>​       -       -       -     226    7.61    3035    2840       0    4.73    0.01   87.65    0.00    0.00    0.00   67.50    3.10    0.00    0.00<br>​                     0       0       0     253    9.04    2878    2824       0    9.07    0.06   81.84    0.00    0.00    0.00   34.06    1.90    0.00    0.00<br>…<br>..</p>
+<p>在c4.4xlarge實例上, 其不支持作業系統級別的 c-state修改, 其預設僅會讓CPU核心在閒置時休眠至 c1 的狀態, 因此在 c4.4xlarge 中並不會發現 tsc 因為系統閒置時遭到中斷的信息.</p>
+<p>c4.4xlarge</p>
+<p>turbostat -i 1 –debug</p>
+<p>   Core     CPU TSC_MHz     SMI  CPU%c1  CPU%c3  CPU%c6  CPU%c7 Pkg%pc2 Pkg%pc3 PkgWatt RAMWatt   PKG_%   RAM_%<br>​       -       -    2900       0  100.00    0.00    0.00    0.00    0.00    0.00   32.12    1.67    0.00    0.00<br>​       0       0    2899       0  100.00    0.00    0.00    0.00    0.00    0.00   32.12    1.67    0.00    0.00<br>…<br>..</p>
+<p>我查閱了相關的 kernel source code, 在針對 tsc 的部份有以下的實作[1].</p>
+<p>With Intel CPUs, we have 3 classes</p>
+<ul>
+<li>CPUs where TSC runs at constant rate and does not stop n C-states</li>
+<li>CPUs where TSC runs at constant rate, but will stop in deep C-states</li>
+<li>CPUs where TSC rate will vary based on P/T-states and TSC will stop in deep<br>C-states.<br>….</li>
+</ul>
+<p>NONSTOP_TSC indicates that TSC does not stop in deep C-states.</p>
+<p>我檢查了kernel 2.6.32-279.23 的原始碼, 我發現該版本已支持上述的功能.</p>
+<p>同時檢查您的 CPU 信息(/proc/cpuinfo), 您的CPU並不支持上述的 “constant_tsc”, “nonstop_tsc” CPU 特性, 在 kernel: 2.6.32-279.23.1.mi5中 CPU flag 信息如下：</p>
+<p>flags        : fpu vme de pse tsc msr pae mce cx8 apic mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx lm rep_good xtopology aperfmperf unfair_spinlock pni pclmulqdq est ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm ida xsaveopt fsgsbase bmi1 erms</p>
+<p>因此透过限制 C-state的睡眠级别 (C6 -&gt; C1), 在您原有的 kernel 上, 可以避免如上的 “Marking TSC unstable due to TSC halts in idle” 错误信息, 同时也能在原有 kernel 中使用 tsc 的 clocksource, 並且能提供較好的性能反應.[3]</p>
+<p>配置如下, 请您在您的 grub 设置档中, 在 kernel 后加上指定的参数 “intel_idle.max_cstate=0”反”processor.max_cstate=1”，范例如下:</p>
+<p>title CentOS (2.6.32-279.23.1.mi5.el6.x86_64)<br>​        root (hd0,0)<br>​        kernel /boot/vmlinuz-2.6.32-279.23.1.mi5.el6.x86_64 root=LABEL=/ ro xen_blkfront.sda_is_xvda=1 console=ttyS0 xen_pv_hvm=enable crashkernel=auto LANG=en_US.UTF-8 KEYTABLE=us intel_idle.max_cstate=0 processor.max_cstate=1<br>​        initrd /boot/initramfs-2.6.32-279.23.1.mi5.el6.x86_64.img</p>
+<p>配置完后, 请重新开机, 在重开机后, 使用 turbostat 觀察, 系統最深的睡眠狀態會停留在 c1, 同時会发现在 available_clocksource 中已可支持 tsc, 同时预设的 clocksource 也会变更为 tsc.</p>
+<p>c4.8xalrge<br>Package    Core     CPU Avg_MHz   %Busy Bzy_MHz TSC_MHz     SMI  CPU%c1  CPU%c3  CPU%c6  CPU%c7 Pkg%pc2 Pkg%pc3 PkgWatt RAMWatt   PKG_%   RAM_%<br>​       -       -       -     125    3.94    3167    2901       0   96.06    0.00    0.00    0.00    0.00    0.00   84.69    2.92    0.00    0.00<br>​       0       0       0     147    4.63    3170    2902       0   95.37    0.00    0.00    0.00    0.00    0.00   44.11    1.66    0.00    0.00</p>
+<p>cat /sys/devices/system/clocksource/clocksource0/available_clocksource</p>
+<p>tsc hpet acpi_pm</p>
+<p>cat /sys/devices/system/clocksource/clocksource0/current_clocksource</p>
+<p>tsc</p>
+<p>另外, 在新版的 kernel 2.6.32-696.28 中不需作上述的修改即可使用 tsc, 其原因是在新版的 kernel 中可以正確的辨識 CPU 所支持的特性. 觀察 /proc/cpuinfo , 您可以發現在較新的 kernel中, 能辩識 CPU 的 “constant_tsc” 及 “nonstop_tsc” 特性.<br>因此並不會因為深度的睡眠而使 tsc 中斷, kernel:2.6.32-696.28中CPU信息如下：</p>
+<p>flags        : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good xtopology nonstop_tsc aperfmperf unfair_spinlock pni pclmulqdq monitor est ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm ida xsaveopt invpcid_single pti retpoline fsgsbase bmi1 avx2 smep bmi2 erms invpcid</p>
+<p>雖然上述使用修改 kernel參數的部份能使您的系統恢復預期的性能. 但根據您所使用的OS版本(CentOS 6.3)及kernel版本(2.6.32-279.23.1.mi5), 我仍然強<strong>烈建議您可以考慮升級至新的發行版本</strong>, 新版的 OS/kernel 提供了許多的安全修補以及性能的改進, 並能更好的識別新的硬體及功能. </p>
+</blockquote>
+<p>总结一句话：升级内核版本</p>
+<hr>
+<p>最后我们申请新的centos7.3机器，此问题解决</p>
+<p>又排查了一下同一时段申请的AWS机器,发现20多台机器存在相同的情况,把这批机器进行下线处理,去掉了一大隐患.</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/songshiqiang.github.io/2018/10/10/mysql-varchar/" data-toggle="tooltip" data-placement="top" title="为什么说varchar需要多少申请多少">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/songshiqiang.github.io/2018/09/10/mysql-timestamp/" data-toggle="tooltip" data-placement="top" title="timestamp你用对了吗">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/songshiqiang.github.io/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">songshiqiang&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "sq892246139";
+    var disqus_identifier = "http:/2018/09/19/linux-low-kerner-version-problem/";
+    var disqus_url = "http:/2018/09/19/linux-low-kerner-version-problem/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/sq892246139">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/songshiqiang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; songshiqiang&#39;s Blog 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/songshiqiang.github.io/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/songshiqiang.github.io/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/songshiqiang.github.io/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http:/songshiqiang.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http:/songshiqiang.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
