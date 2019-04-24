@@ -196,7 +196,12 @@
 民间最全的Linux系统内核参数调优说明
 高性能linux服务器内核调优
 tcp原理理解TCP连接的状态详解以及故障排查
-常用调优项1234567891011121314151617181920212223242526#该参数设置系统的TIME_WAIT的数量，如果超过默认值则会被立即清除net.ipv4.tcp_max_tw_b......
+TCP三次握手，四次挥手，你真的懂吗？
+白话TCP拥塞控制：运粮的河道堵塞了怎么办?
+传输控制协议TCP
+TCP-Keepalive-HOWTO
+从TCP协议的原理来谈谈rst复位攻击
+图说TCP之滑动窗口和拥......
         </div>
     </a>
     <p class="post-meta">
@@ -258,6 +263,32 @@ elasticsearch配合上grafana是我感觉使用起来最得劲的一个了
 笔记本屏幕最好放在和视线水平的位置,防止出现颈椎病
 一个靠背程序员长时间做在电脑桌前,一定要注意自己的腰和颈椎
 买一......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-12-11
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/12/11/crawl-percona-blog/">
+        <h2 class="post-title">
+            爬取percona博客
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在MySQL领域,peocona公司的名字响当当,有太多知名的产品了,比如xtrabackup,percona server系列产品
+他们的工程师写的博客当然质量也非常高了
+有时读其中一篇文章感觉不过瘾,想把他们的所有文章都通读一遍,但是只想读那些感兴趣的文章,一篇一篇去翻,感觉比较慢,怎么办呢?
+自己写一个下载脚本,把所有博客全部下载下来
+1#本脚本使用python3
+1234567891......
         </div>
     </a>
     <p class="post-meta">
@@ -440,35 +471,6 @@ From MySQL Manual:
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/07/11/mysql-server-id-same/">
-        <h2 class="post-title">
-            MySQL-server-id一样会发生什么
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-主库从库server-id一样
-
-​      从库复制会报错
-
-从库从库server-id一样
-
-123Slave_IO_Running: YesSlave_SQL_Running: YESSeconds_Behind_Master: 0
-123Slave_IO_Running: ConnectingSlave_SQL_Running: YESSeconds_Behind_Master:......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-07-11
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -511,6 +513,8 @@ From MySQL Manual:
                         
                             
                             <a href="/songshiqiang.github.io/tags/#OS" title="OS" rel="2">OS</a>
+                            
+                        
                             
                         
                             

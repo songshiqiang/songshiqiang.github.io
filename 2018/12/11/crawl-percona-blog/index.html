@@ -13,11 +13,11 @@
 
     <title>
         
-          微服务思想对DBA的意义 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          爬取percona博客 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/11/23/microservice-and-mysql/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2018/12/11/crawl-percona-blog/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -165,14 +165,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#python" title="python">python</a>
                         
                     </div>
-                    <h1>微服务思想对DBA的意义</h1>
+                    <h1>爬取percona博客</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-11-23
+                        2018-12-11
                     </span>
                 </div>
             </div>
@@ -191,62 +191,14 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>先说说什么是微服务</p>
-<p>James Lewis 和 Martin Fowler关于微服务架构的定义,有以下几点：</p>
-<ol>
-<li>整个应用系统由若干个独立运行的服务组成</li>
-<li>服务之间有轻量级的通讯机制，通常是REST API</li>
-<li>每个服务都有自己的业务逻辑，并且可以单独部署</li>
-<li>去中心化的服务管理机制</li>
-<li>每个服务可以用不同的编程语言实现，使用不同的数据存储技术</li>
-</ol>
-<p>目前比较流行的微服务框架spring cloud包含了以下几类的组件</p>
-<ul>
-<li>服务注册发现：Eurake，Dobbo，Consul，ZooKeeper</li>
-<li>服务配置：Spring Cloud Config，Archaius</li>
-<li>服务熔断：Hystrix，resilience4j</li>
-<li>网关：Zuul，Spring Cloud Gateway</li>
-<li>负载均衡：Ribbon，Feign</li>
-<li>追踪工具：Sleuth，Zipkin，Htrace</li>
-<li>日志采集：logback，ElasticSearch</li>
-<li>监控平台：Promethues，Kibana，grafana，Spring boot admin</li>
-</ul>
-<p><img src="microservice.png" alt="微服务"></p>
-<hr>
-<p><strong>网关</strong></p>
-<p>数据库中间件maxscale , proxysql 等可以算是一种网关和负载均衡</p>
-<p><strong>负载均衡</strong></p>
-<p>数据库做负载均衡除了中间件的读写分离,还可以使用haproxy等4层负载均衡软件</p>
-<p><strong>服务配置</strong></p>
-<p>这里我要讲一讲我遇到过的各种各样的配置方法了</p>
-<ul>
-<li><p>直接把数据库IP配置在配置文件中,比如</p>
-<p>java项目配置在xml配置文件中   </p>
-</li>
-</ul>
-<p>​      go项目配置在ini配置文件中</p>
-<ul>
-<li>也有java项目把数据库IP配置在zookeeper中的</li>
-<li>也有PHP项目把数据库的对应域名配置在一个统一的配置中心的</li>
-</ul>
-<p>至于各种配置方法也是根据不同的数据库高可用方案来的,至于那种方案比较好,我们在另外一篇&lt;MySQL高可用方案&gt;中在讲</p>
-<p><strong>日志采集与追踪</strong></p>
-<p>数据库慢查询日志分析,也是使用的ELK那一套</p>
-<p><strong>监控平台</strong></p>
-<p>Promethues , open-falcon, ELK</p>
-<p><strong>服务降级</strong></p>
-<p>单机多实例的情况下,磁盘满了,首先迁移的是从库</p>
-<p><strong>服务熔断</strong></p>
-<p>经历过几次故障,业务大量的使用insert into on update dumplicate key 语句,并发上来了,主库卡死</p>
-<p>通过pt-kill杀掉僵死的sql,但是并没有好转</p>
-<p>如果这个时候切换主库,会不会把新主库搞死呢,所以没有切换主库</p>
-<p>最后找出请求数据库比较多的IP,把这个IP的权限下掉,等数据库恢复后,在把权限加上</p>
-<p>这也算是一种熔断措施了</p>
-<p><strong>服务限流</strong></p>
-<p>还是上面的那个事情,首先业务把insert into on update dumplicate key语句改掉了</p>
-<p>另外业务开发能力比较强,自己实现了和tcp滑动窗口原理类似的组件来访问数据库</p>
-<p>当发现数据库的延时增加的时候,就相应的减少对数据库的请求</p>
-<p>这也算是一种服务限流了</p>
+                <p>在MySQL领域,peocona公司的名字响当当,有太多知名的产品了,比如xtrabackup,percona server系列产品</p>
+<p>他们的工程师写的博客当然质量也非常高了</p>
+<p>有时读其中一篇文章感觉不过瘾,想把他们的所有文章都通读一遍,但是只想读那些感兴趣的文章,一篇一篇去翻,感觉比较慢,怎么办呢?</p>
+<p>自己写一个下载脚本,把所有博客全部下载下来</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#本脚本使用python3</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"># 第一页的处理有点不一样,暂时没处理</span><br><span class="line">#例子只处理了<span class="number">1</span>页,要是想下载所有的blog,需要来个<span class="keyword">for</span>循环哦</span><br><span class="line"># <span class="keyword">for</span> <span class="built_in">page</span> <span class="built_in">in</span> range(<span class="number">2</span>,<span class="number">359</span>):</span><br><span class="line"><span class="built_in">page</span>=<span class="number">2</span></span><br><span class="line">blogurl=<span class="string">"https://www.percona.com/blog/page/"</span>+ str(<span class="built_in">page</span>)</span><br><span class="line">print(blogurl)</span><br><span class="line">soup=BeautifulSoup(requests.get(blogurl).<span class="keyword">text</span>)</span><br><span class="line">urllist=soup.find_all(href=re.compile(<span class="string">"https://www.percona.com/blog/[0-9]&#123;4&#125;/[0-9]&#123;2&#125;/[0-9]&#123;2&#125;/\S"</span>))</span><br><span class="line">unqlist=[]</span><br><span class="line"><span class="keyword">for</span> url <span class="built_in">in</span> urllist:</span><br><span class="line">    unqlist.append(url[<span class="string">'href'</span>])</span><br><span class="line">urlset=set(unqlist)</span><br><span class="line"><span class="keyword">for</span> url <span class="built_in">in</span> urlset:</span><br><span class="line">    blognamelist=url.split(<span class="string">'/'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    htmlname=<span class="string">"/home/sq/work/"</span>+blognamelist[<span class="number">4</span>] +<span class="string">"-"</span>+ blognamelist[<span class="number">5</span>] +<span class="string">"-"</span>+blognamelist[<span class="number">6</span>]+<span class="string">"-"</span>+ blognamelist[<span class="number">7</span>]</span><br><span class="line">    cmd=<span class="string">"wget "</span>+url +<span class="string">" -O "</span>+htmlname</span><br><span class="line">    os.system(cmd)</span><br></pre></td></tr></table></figure>
+<p>最后下载下来的网页</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-rw-rw-r--  <span class="number">1</span> sq sq <span class="number">154014</span> <span class="number">4</span>月  <span class="number">23</span> <span class="number">21</span>:<span class="number">31</span> <span class="number">2019</span>-<span class="number">04</span>-<span class="number">04</span>-replication-between-postgresql-versions-using-logical-replication</span><br><span class="line">-rw-rw-r--  <span class="number">1</span> sq sq <span class="number">213256</span> <span class="number">4</span>月  <span class="number">23</span> <span class="number">21</span>:<span class="number">28</span> <span class="number">2019</span>-<span class="number">04</span>-<span class="number">05</span>-writing-postgresql-extensions-<span class="keyword">is</span>-<span class="function"><span class="keyword">fun</span>-c-language</span></span><br></pre></td></tr></table></figure>
 
 
                 <hr>
@@ -256,12 +208,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/12/11/crawl-percona-blog/" data-toggle="tooltip" data-placement="top" title="爬取percona博客">&larr; Previous Post</a>
+                            <a href="/songshiqiang.github.io/2018/12/11/sre-tools/" data-toggle="tooltip" data-placement="top" title="运维办公工具集">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/11/16/life-conference/" data-toggle="tooltip" data-placement="top" title="有效会议之我见">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2018/11/23/microservice-and-mysql/" data-toggle="tooltip" data-placement="top" title="微服务思想对DBA的意义">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -294,7 +246,7 @@
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#python" title="python">python</a>
                         
                     </div>
                 </section>
@@ -326,8 +278,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/11/23/microservice-and-mysql/";
-    var disqus_url = "http:/2018/11/23/microservice-and-mysql/";
+    var disqus_identifier = "http:/2018/12/11/crawl-percona-blog/";
+    var disqus_url = "http:/2018/12/11/crawl-percona-blog/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
