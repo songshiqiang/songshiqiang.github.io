@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -184,6 +184,169 @@
 
 <div class="post-preview">
 
+    <a href="/songshiqiang.github.io/2018/11/15/linux-delete/">
+        <h2 class="post-title">
+            文件删除空间未释放
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            备份导致删库后磁盘空间不释放收到报警,磁盘空间小于%2
+一顿查找,发现有些已经拆分出去不在使用的数据库占用了很大的磁盘空间
+那就开始删除这些数据库吧
+drop database  drop  table …….
+删除完了,在看一看磁盘空间大小
+咦,怎么还是98%,刚刚删除的明明有500G数据嘛
+怎么回事?
+哈哈,看到这里,经验丰富的应该知道了,这些数据库被别的进程占用了,最有可能的进程就是备......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-11-15
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/10/10/mysql-varchar/">
+        <h2 class="post-title">
+            为什么说varchar需要多少申请多少
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在数据库开发规范中,我们一般要求varchar(N),N只要符合长度要求即可,没有必要越大越好
+比如name字段,没有必要N=1000,没有人的名字那么长吧
+但是你可能会说,varchar(1000)中存放sq和varchar(10)存放sq,占用的字节长度一样的啊,为啥不能使用varchar(1000)呢?
+第一个原因:
+N越大,存储的空间可能越大
+From MySQL Manual:
+1......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-10-10
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/10/10/redis-knowledge/">
+        <h2 class="post-title">
+            Redis文章集锦
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            阿里云Redis开发规范
+Redis运行时的10大重要指标
+Redis在唯品会的大规模应用
+Redis深入之道——Redis4.0、读写分离技术揭秘及实战应用
+缓存穿透，缓存击穿，缓存雪崩解决方案分析
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-10-10
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/09/19/golang-pointer/">
+        <h2 class="post-title">
+            Golang何时该使用指针
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一个函数何时该用指针类型做receiver对初学者而言一直是个头疼的问题。如果不知道该如何取舍，选择指针类型的receiver。但有些时候value receiver更加合适，比如对象是一些轻量级的不变的structs，使用value receiver会更加高效。下面是列举了一些常用的判断指导。
+
+如果receiver是map、func或者chan，不要使用指针
+如果receiver是sli......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-09-19
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/09/19/linux-low-kerner-version-problem/">
+        <h2 class="post-title">
+            Linux内核太低导致机器性能下降10倍
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            需求如下:
+需要将业务数据库集群从老集群切换到新集群
+切换后,发现业务的响应时间严重增加,业务可用性影响严重,然后就回滚了
+
+需要排查一下为什么业务响应时间增加了,我们通过日志排查发现sql执行时间边长
+下面是新老机器的配置,机器都是AWS的EC2，系统都是centos6.3
+
+
+
+老从库A(2016年12月开通)
+新从库B(2018年4月开通)
+其他机器C(2018年3月开通)
+
+
+
+
+8......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-09-19
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/09/10/mysql-timestamp/">
+        <h2 class="post-title">
+            timestamp你用对了吗
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            需求12345create table test(    id int auto_increment primary key,    createtime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,    updatetime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURR......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-09-10
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/songshiqiang.github.io/2018/07/11/mysql-server-id-same/">
         <h2 class="post-title">
             MySQL-server-id一样会发生什么
@@ -237,7 +400,7 @@ mysql binlog_format是row,binlog_row_image = full的时候,解析出binlog,通�
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2018/06/15/group-replication-vs-galera/">
+    <a href="/songshiqiang.github.io/2018/06/15/mysql-group-replication-vs-galera/">
         <h2 class="post-title">
             group-replication-vs-galera
         </h2>
@@ -260,7 +423,7 @@ From the definition, Group Replication......
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2018/06/14/innodb-trx-and-lock/">
+    <a href="/songshiqiang.github.io/2018/06/14/mysql-innodb-trx-and-lock/">
         <h2 class="post-title">
             Innodb事务与锁
         </h2>
@@ -283,88 +446,6 @@ SELECT操作在“REPEATABLE READ”和“READ COM-MITTED”级别下，使.....
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/06/10/mysql-lock/">
-        <h2 class="post-title">
-            MySQL锁文章相关汇总
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            mysql排查死锁，不是你想象中的那么简单…
-mysql数据库锁，为什么开发人员要熟悉了解
-MySQL 加锁处理分析
-一个最不可思议的MySQL死锁分析
-抱歉，没早点把这么全面的InnoDB锁机制发给你
-MySQL锁机制与实践：做有逼格的dba
-insert操作加什么锁?
-
-
-INSERT sets an exclusive lock on the inserted row. This lo......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-06-10
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/05/14/binlog-problems/">
-        <h2 class="post-title">
-            Binlog相关常见问题整理
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            MySQL高可用架构中，主库复制是非常常见的一种。当主库宕机后，可以提升一个从库作为新的主库，保证服务可用性；同时可以通过扩展从库，提高整个集群的QPS。在主从复制架构下，MySQL通过binlog来实现主从数据的一致性。
- 
-如上图，MySQL主从复制主要有以下步骤  
-(1) master将改变记录到binary log中
-(2) slave io_thread去请求主库的binlog，......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-05-14
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/04/14/Resource-temporarily-unavailable/">
-        <h2 class="post-title">
-            Resource-temporarily-unavailable
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-This document is not completed and will be updated anytime.
-
-一次线上切proxy,proxy切换到新集群后发现机器卡住了,控制台出现
-1Resource temporarily unavailable
-
-问题分析实际上出现这种现象，本质原因是Linux操作系统无法创建更多进程，导致出错。知道了问题原因，那么就让Linux允许创建......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-04-14
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -375,6 +456,10 @@ This document is not completed and will be updated anytime.
             <a href="/songshiqiang.github.io/">&larr; Newer Posts</a>
         </li>
     
+    
+        <li class="next">
+            <a href="/songshiqiang.github.io/page/3/">Older Posts &rarr;</a>
+        </li>
     
 </ul>
 
@@ -402,19 +487,25 @@ This document is not completed and will be updated anytime.
                             
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#Linux" title="Linux" rel="6">Linux</a>
-                            
-                        
-                            
-                            <a href="/songshiqiang.github.io/tags/#OS" title="OS" rel="2">OS</a>
-                            
                         
                             
                         
                             
+                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="2">golang</a>
+                            
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="8">MySQL</a>
+                        
+                            
+                            <a href="/songshiqiang.github.io/tags/#Linux" title="Linux" rel="4">Linux</a>
+                            
+                        
+                            
+                        
+                            
+                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="9">MySQL</a>
+                            
+                        
                             
                         
                             

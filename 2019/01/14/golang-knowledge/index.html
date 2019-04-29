@@ -13,11 +13,11 @@
 
     <title>
         
-          爬取percona博客 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          golang文章集锦 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/12/11/crawl-percona-blog/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2019/01/14/golang-knowledge/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -165,14 +165,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#python" title="python">python</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#golang" title="golang">golang</a>
                         
                     </div>
-                    <h1>爬取percona博客</h1>
+                    <h1>golang文章集锦</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-12-11
+                        2019-01-14
                     </span>
                 </div>
             </div>
@@ -191,14 +191,8 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>在MySQL领域,peocona公司的名字响当当,有太多知名的产品了,比如xtrabackup,percona server系列产品</p>
-<p>他们的工程师写的博客当然质量也非常高了</p>
-<p>有时读其中一篇文章感觉不过瘾,想把他们的所有文章都通读一遍,但是只想读那些感兴趣的文章,一篇一篇去翻,感觉比较慢,怎么办呢?</p>
-<p>自己写一个下载脚本,把所有博客全部下载下来</p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#本脚本使用python3</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"># 第一页的处理有点不一样,暂时没处理</span><br><span class="line">#例子只处理了<span class="number">1</span>页,要是想下载所有的blog,需要来个<span class="keyword">for</span>循环哦</span><br><span class="line"># <span class="keyword">for</span> <span class="built_in">page</span> <span class="built_in">in</span> range(<span class="number">2</span>,<span class="number">359</span>):</span><br><span class="line"><span class="built_in">page</span>=<span class="number">2</span></span><br><span class="line">blogurl=<span class="string">"https://www.percona.com/blog/page/"</span>+ str(<span class="built_in">page</span>)</span><br><span class="line">print(blogurl)</span><br><span class="line">soup=BeautifulSoup(requests.get(blogurl).<span class="keyword">text</span>)</span><br><span class="line">urllist=soup.find_all(href=re.compile(<span class="string">"https://www.percona.com/blog/[0-9]&#123;4&#125;/[0-9]&#123;2&#125;/[0-9]&#123;2&#125;/\S"</span>))</span><br><span class="line">unqlist=[]</span><br><span class="line"><span class="keyword">for</span> url <span class="built_in">in</span> urllist:</span><br><span class="line">    unqlist.append(url[<span class="string">'href'</span>])</span><br><span class="line">urlset=set(unqlist)</span><br><span class="line"><span class="keyword">for</span> url <span class="built_in">in</span> urlset:</span><br><span class="line">    blognamelist=url.split(<span class="string">'/'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    htmlname=<span class="string">"/home/sq/work/"</span>+blognamelist[<span class="number">4</span>] +<span class="string">"-"</span>+ blognamelist[<span class="number">5</span>] +<span class="string">"-"</span>+blognamelist[<span class="number">6</span>]+<span class="string">"-"</span>+ blognamelist[<span class="number">7</span>]</span><br><span class="line">    cmd=<span class="string">"wget "</span>+url +<span class="string">" -O "</span>+htmlname</span><br><span class="line">    os.system(cmd)</span><br></pre></td></tr></table></figure>
-<p>最后下载下来的网页</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-rw-rw-r--  <span class="number">1</span> sq sq <span class="number">154014</span> <span class="number">4</span>月  <span class="number">23</span> <span class="number">21</span>:<span class="number">31</span> <span class="number">2019</span>-<span class="number">04</span>-<span class="number">04</span>-replication-between-postgresql-versions-using-logical-replication</span><br><span class="line">-rw-rw-r--  <span class="number">1</span> sq sq <span class="number">213256</span> <span class="number">4</span>月  <span class="number">23</span> <span class="number">21</span>:<span class="number">28</span> <span class="number">2019</span>-<span class="number">04</span>-<span class="number">05</span>-writing-postgresql-extensions-<span class="keyword">is</span>-<span class="function"><span class="keyword">fun</span>-c-language</span></span><br></pre></td></tr></table></figure>
+                <p><a href="https://cloud.tencent.com/developer/news/205918" target="_blank" rel="noopener">Go语言构建千万级在线的高并发消息推送系统实践</a></p>
+<p><a href="https://colobu.com/2017/12/28/top-golang-articles-of-2017/" target="_blank" rel="noopener">2017年超有价值的Golang文章</a></p>
 
 
                 <hr>
@@ -208,12 +202,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/12/11/sre-tools/" data-toggle="tooltip" data-placement="top" title="运维办公工具集">&larr; Previous Post</a>
+                            <a href="/songshiqiang.github.io/2019/01/14/linux-optimize/" data-toggle="tooltip" data-placement="top" title="tcp文章集锦">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/11/23/microservice-and-mysql/" data-toggle="tooltip" data-placement="top" title="微服务思想对DBA的意义">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2018/12/14/elasticsearch-knowledge/" data-toggle="tooltip" data-placement="top" title="elasticsearch文章集锦">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -246,7 +240,7 @@
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#python" title="python">python</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#golang" title="golang">golang</a>
                         
                     </div>
                 </section>
@@ -278,8 +272,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/12/11/crawl-percona-blog/";
-    var disqus_url = "http:/2018/12/11/crawl-percona-blog/";
+    var disqus_identifier = "http:/2019/01/14/golang-knowledge/";
+    var disqus_url = "http:/2019/01/14/golang-knowledge/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

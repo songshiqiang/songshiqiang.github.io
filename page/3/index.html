@@ -13,11 +13,11 @@
 
     <title>
         
-          Resource-temporarily-unavailable - songshiqiang的博客 | songshiqiang&#39;s Blog
+          songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/04/14/Resource-temporarily-unavailable/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/page/3/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -147,131 +147,239 @@
 
 
     <!-- Main Content -->
-    
-<!-- Image to hack wechat -->
-<!-- <img src="http:/songshiqiang.github.io/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
-
-<!-- Post Header -->
-<style type="text/css">
-    header.intro-header{
-        background-image: url('/songshiqiang.github.io/img/home-bg.jpg')
-    }
-</style>
-<header class="intro-header">
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/songshiqiang.github.io/img/home-bg.jpg')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#Linux" title="Linux">Linux</a>
-                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#OS" title="OS">OS</a>
-                        
-                    </div>
-                    <h1>Resource-temporarily-unavailable</h1>
-                    <h2 class="subheading"></h2>
-                    <span class="meta">
-                        Posted by songshiqiang on
-                        2018-04-14
-                    </span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>songshiqiang&#39;s Blog</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">To Be A Lean Developer!</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
 
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
+
+<!-- USE SIDEBAR -->
     <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+            
+                <!-- Main Content -->
 
-                <blockquote>
-<p>This document is not completed and will be updated anytime.</p>
-</blockquote>
-<p>一次线上切proxy,proxy切换到新集群后发现机器卡住了,控制台出现</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Resource temporarily unavailable</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>问题分析<br>实际上出现这种现象，本质原因是Linux操作系统无法创建更多进程，导致出错。<br>知道了问题原因，那么就让Linux允许创建更多的进程就可以了。</p>
-</li>
-<li><p>修改Linux最大进程数<br>在服务器上执行ulimit -a</p>
-<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ ulimit -a</span><br><span class="line">core <span class="keyword">file</span> <span class="keyword">size</span>          (blocks, -c) <span class="number">0</span></span><br><span class="line">data seg <span class="keyword">size</span>           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) <span class="number">0</span></span><br><span class="line"><span class="keyword">file</span> <span class="keyword">size</span>               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) <span class="number">1033243</span></span><br><span class="line"><span class="keyword">max</span> locked <span class="keyword">memory</span>       (kbytes, -l) <span class="number">64</span></span><br><span class="line"><span class="keyword">max</span> <span class="keyword">memory</span> <span class="keyword">size</span>         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) <span class="number">1024</span></span><br><span class="line">pipe <span class="keyword">size</span>            (<span class="number">512</span> bytes, -p) <span class="number">8</span></span><br><span class="line">POSIX message queues     (bytes, -q) <span class="number">819200</span></span><br><span class="line">real-time priority              (-r) <span class="number">0</span></span><br><span class="line">stack <span class="keyword">size</span>              (kbytes, -s) <span class="number">10240</span></span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line"><span class="keyword">max</span> user processes              (-u) <span class="number">2047</span></span><br><span class="line">virtual <span class="keyword">memory</span>          (kbytes, -v) unlimited</span><br><span class="line"><span class="keyword">file</span> locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-<p>其中<code>open files (-n) 1024</code> 这个值，就是我们要修改的地方了。</p>
-</li>
-</ul>
-<ul>
-<li><p>问题解决</p>
-<p>我们可以使用 <code>ulimit -u 4096</code> 修改max user processes的值，<strong>但是只能在当前终端的这个session里面生效，重新登录后仍然是使用系统默认值</strong>。</p>
-<p>正确的修改方式是修改/etc/security/limits.d/90-nproc.conf文件中的值。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /etc/security/limits.d/90-nproc.conf</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default <span class="built_in">limit</span> <span class="keyword">for</span> number of user<span class="string">'s processes to prevent</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> accidental fork bombs.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> See rhbz <span class="comment">#432903 for reasoning.</span></span></span><br><span class="line">*          soft    nproc     4096</span><br><span class="line">root       soft    nproc     unlimited</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>具体可以参考这篇文章</p>
-<p><a href="https://access.redhat.com/solutions/22105" target="_blank" rel="noopener">https://access.redhat.com/solutions/22105</a></p>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/06/10/mysql-lock/">
+        <h2 class="post-title">
+            MySQL锁文章相关汇总
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            mysql排查死锁，不是你想象中的那么简单…
+mysql数据库锁，为什么开发人员要熟悉了解
+MySQL 加锁处理分析
+一个最不可思议的MySQL死锁分析
+抱歉，没早点把这么全面的InnoDB锁机制发给你
+MySQL锁机制与实践：做有逼格的dba
+漫谈死锁(杨奇龙系列文章)
+mysql锁——元数据锁和innodb锁
+insert操作加什么锁?
+
+INSERT sets an exclusive......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-06-10
+    </p>
+
+</div>
 <hr>
-<p>其实问题发生的时候,我们比对了一下正常机器和故障机器之间配置等有没有不同的地方</p>
-<p>我感觉这是一个好思路</p>
-<p>可以使用pt-sumary生成系统统计报告,比对一下2台机器系统报告之间有什么不同</p>
-<p>另外我们在切换主库的时候,一般通过pt-config-diff比对一下老主库和新主库之间配置有什么不同</p>
-<p>比较常见的可能max_connection不同</p>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/05/14/mysql-binlog-problems/">
+        <h2 class="post-title">
+            Binlog相关常见问题整理
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            MySQL高可用架构中，主库复制是非常常见的一种。当主库宕机后，可以提升一个从库作为新的主库，保证服务可用性；同时可以通过扩展从库，提高整个集群的QPS。在主从复制架构下，MySQL通过binlog来实现主从数据的一致性。
+ 
+如上图，MySQL主从复制主要有以下步骤  
+(1) master将改变记录到binary log中
+(2) slave io_thread去请求主库的binlog，......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-05-14
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/04/14/linux-resource-temporarily-unavailable/">
+        <h2 class="post-title">
+            Resource-temporarily-unavailable
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+This document is not completed and will be updated anytime.
+
+一次线上切proxy,proxy切换到新集群后发现机器卡住了,控制台出现
+1Resource temporarily unavailable
+
+问题分析实际上出现这种现象，本质原因是Linux操作系统无法创建更多进程，导致出错。知道了问题原因，那么就让Linux允许创建......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-04-14
+    </p>
+
+</div>
+<hr>
 
 
-                <hr>
 
-                
+<!-- Pager -->
 
-                <ul class="pager">
-                    
-                        <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/05/14/binlog-problems/" data-toggle="tooltip" data-placement="top" title="Binlog相关常见问题整理">&larr; Previous Post</a>
-                        </li>
-                    
-                    
-                </ul>
+<ul class="pager">
+    
+        <li class="previous">
+            <a href="/songshiqiang.github.io/page/2/">&larr; Newer Posts</a>
+        </li>
+    
+    
+</ul>
 
-                
 
-                
-                <!-- disqus 评论框 start -->
-                <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread"></div>
-                </div>
-                <!-- disqus 评论框 end -->
+
+                <!-- 如果开启评论功能 -->
                 
 
             </div>
-    <!-- Side Catalog Container -->
-        
-
     <!-- Sidebar Container -->
-
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
-
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
                 <!-- Featured Tags -->
                 
                 <section>
                     <!-- no hr -->
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                       
-                          <a class="tag" href="/songshiqiang.github.io/tags/#Linux" title="Linux">Linux</a>
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#OS" title="OS">OS</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="2">golang</a>
+                            
+                        
+                            
+                        
+                            
+                            <a href="/songshiqiang.github.io/tags/#Linux" title="Linux" rel="4">Linux</a>
+                            
+                        
+                            
+                        
+                            
+                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="9">MySQL</a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
                         
                     </div>
                 </section>
                 
 
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/songshiqiang.github.io/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+
+                        
+                            <img src="/songshiqiang.github.io//img/avatar.jpg">
+                        
+
+                        
+                            <p>我要成为魔法师!</p>
+                        
+
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            
+                            
+                                <li>
+                                    <a target="_blank" href="https://www.zhihu.com/people/sq892246139">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+
+                            
+
+                            
+
+                            
+                                <li>
+                                    <a target="_blank" href="https://github.com/songshiqiang">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                </section>
+                
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -286,66 +394,9 @@
                 </ul>
                 
             </div>
-
-        </div>
+        
     </div>
-</article>
-
-
-
-
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/04/14/Resource-temporarily-unavailable/";
-    var disqus_url = "http:/2018/04/14/Resource-temporarily-unavailable/";
-
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus 公共JS代码 end -->
-
-
-
-
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'always',
-          placement: 'right',
-          icon: '#'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
-
+</div>
 
 
     <!-- Footer -->

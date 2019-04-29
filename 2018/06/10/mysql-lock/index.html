@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -197,13 +197,30 @@
 <p><a href="http://hedengcheng.com/?p=844" target="_blank" rel="noopener">一个最不可思议的MySQL死锁分析</a></p>
 <p><a href="https://mp.weixin.qq.com/s?src=11&amp;timestamp=1555677604&amp;ver=1556&amp;signature=H9*asJ7KyQxn41Y5420bSZDxVIR*d94X0bjh58IuAYsE5ZBoqIbBB6r24eN-rDBHAQ-atVdJrCtXGU1Rm5*ZyQCkTqj-YMrdSRKH5iulmvtyefmtfx0nGl1a8Rl6pGH*&amp;new=1" target="_blank" rel="noopener">抱歉，没早点把这么全面的InnoDB锁机制发给你</a></p>
 <p><a href="http://www.cainiaoxueyuan.com/sjk/4569.html" target="_blank" rel="noopener">MySQL锁机制与实践：做有逼格的dba</a></p>
+<p><a href="http://blog.itpub.net/22664653/viewspace-2145736/" target="_blank" rel="noopener">漫谈死锁(杨奇龙系列文章)</a></p>
+<p><a href="https://blog.csdn.net/wanbf123/article/details/80697787" target="_blank" rel="noopener">mysql锁——元数据锁和innodb锁</a></p>
 <p>insert操作加什么锁?</p>
-<blockquote>
 <blockquote>
 <p><strong>INSERT sets an exclusive lock on the inserted row</strong>. This lock is an index-record lock, not a next-key lock (that is, there is no gap lock) and does not prevent other sessions from inserting into the gap before the inserted row.</p>
 <p><strong>Prior to inserting the row, a type of gap lock called an insert intention gap lock is set</strong>. This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap. Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6 each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.</p>
 <p><strong>If a duplicate-key error occurs, a shared lock on the duplicate index record is set.</strong> This use of a shared lock can result in deadlock should there be multiple sessions trying to insert the same row if another session already has an exclusive lock. This can occur if another session deletes the row. Suppose that an InnoDB table t1 has the following structure:</p>
 </blockquote>
+<p><strong>insert 的加锁方式</strong><br>对于并发insert造成唯一键冲突的时候 insert的加锁策略是 </p>
+<blockquote>
+<ol>
+<li>第一阶段 唯一性约束检查，先申请LOCK_S + LOCK_ORDINARY</li>
+<li>第二阶段 获取阶段一的锁并且insert成功之后,插入的位置有Gap锁:LOCK_INSERT_INTENTION,为了防止其他insert 唯一键冲突。</li>
+<li>新数据插入:LOCK_X + LOCK_REC_NOT_GAP</li>
+<li>对于insert操作来说，若发生唯一约束冲突，则需要对冲突的唯一索引加上S Next-key Lock。从这里会发现，即使是RC事务隔离级别，也同样会存在Next-Key Lock锁，从而阻塞并发。然而，文档没有说明的是，对于检测到冲突的唯一索引，等待线程在获得S Lock之后，还需要对下一个记录进行加锁，在源码中由函数row_ins_scan_sec_index_for_duplicate进行判断</li>
+</ol>
+</blockquote>
+<p><strong>delete 的加锁方式</strong></p>
+<blockquote>
+<p>1 在非唯一索引的情况下，删除一条存在的记录是有gap锁，锁住记录本身和记录之前的gap</p>
+<p>2 在唯一索引和主键的情况下删除一条存在的记录，因为都是唯一值，进行删除的时候，是不会有gap存在</p>
+<p>3 非唯一索引，唯一索引和主键在删除一条不存在的记录，均会在这个区间加gap锁</p>
+<p>4 通过非唯一索引和唯一索引去删除一条标记为删除的记录的时候，都会请求该记录的行锁，同时锁住记录之前的gap</p>
+<p>5 RC 情况下是没有gap锁的，除了遇到唯一键冲突的情况，如插入唯一键冲突。</p>
 </blockquote>
 
 
@@ -214,12 +231,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/06/14/innodb-trx-and-lock/" data-toggle="tooltip" data-placement="top" title="Innodb事务与锁">&larr; Previous Post</a>
+                            <a href="/songshiqiang.github.io/2018/06/14/mysql-innodb-trx-and-lock/" data-toggle="tooltip" data-placement="top" title="Innodb事务与锁">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/05/14/binlog-problems/" data-toggle="tooltip" data-placement="top" title="Binlog相关常见问题整理">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2018/05/14/mysql-binlog-problems/" data-toggle="tooltip" data-placement="top" title="Binlog相关常见问题整理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>

@@ -13,11 +13,11 @@
 
     <title>
         
-          微服务思想对DBA的意义 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          MySQL文章集锦 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/11/23/microservice-and-mysql/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2019/01/14/mysql-knowledge/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -168,11 +168,11 @@
                           <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
                         
                     </div>
-                    <h1>微服务思想对DBA的意义</h1>
+                    <h1>MySQL文章集锦</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-11-23
+                        2019-01-14
                     </span>
                 </div>
             </div>
@@ -191,62 +191,14 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>先说说什么是微服务</p>
-<p>James Lewis 和 Martin Fowler关于微服务架构的定义,有以下几点：</p>
-<ol>
-<li>整个应用系统由若干个独立运行的服务组成</li>
-<li>服务之间有轻量级的通讯机制，通常是REST API</li>
-<li>每个服务都有自己的业务逻辑，并且可以单独部署</li>
-<li>去中心化的服务管理机制</li>
-<li>每个服务可以用不同的编程语言实现，使用不同的数据存储技术</li>
-</ol>
-<p>目前比较流行的微服务框架spring cloud包含了以下几类的组件</p>
-<ul>
-<li>服务注册发现：Eurake，Dobbo，Consul，ZooKeeper</li>
-<li>服务配置：Spring Cloud Config，Archaius</li>
-<li>服务熔断：Hystrix，resilience4j</li>
-<li>网关：Zuul，Spring Cloud Gateway</li>
-<li>负载均衡：Ribbon，Feign</li>
-<li>追踪工具：Sleuth，Zipkin，Htrace</li>
-<li>日志采集：logback，ElasticSearch</li>
-<li>监控平台：Promethues，Kibana，grafana，Spring boot admin</li>
-</ul>
-<p><img src="microservice.png" alt="微服务"></p>
-<hr>
-<p><strong>网关</strong></p>
-<p>数据库中间件maxscale , proxysql 等可以算是一种网关和负载均衡</p>
-<p><strong>负载均衡</strong></p>
-<p>数据库做负载均衡除了中间件的读写分离,还可以使用haproxy等4层负载均衡软件</p>
-<p><strong>服务配置</strong></p>
-<p>这里我要讲一讲我遇到过的各种各样的配置方法了</p>
-<ul>
-<li><p>直接把数据库IP配置在配置文件中,比如</p>
-<p>java项目配置在xml配置文件中   </p>
-</li>
-</ul>
-<p>​      go项目配置在ini配置文件中</p>
-<ul>
-<li>也有java项目把数据库IP配置在zookeeper中的</li>
-<li>也有PHP项目把数据库的对应域名配置在一个统一的配置中心的</li>
-</ul>
-<p>至于各种配置方法也是根据不同的数据库高可用方案来的,至于那种方案比较好,我们在另外一篇&lt;MySQL高可用方案&gt;中在讲</p>
-<p><strong>日志采集与追踪</strong></p>
-<p>数据库慢查询日志分析,也是使用的ELK那一套</p>
-<p><strong>监控平台</strong></p>
-<p>Promethues , open-falcon, ELK</p>
-<p><strong>服务降级</strong></p>
-<p>单机多实例的情况下,磁盘满了,首先迁移的是从库</p>
-<p><strong>服务熔断</strong></p>
-<p>经历过几次故障,业务大量的使用insert into on update dumplicate key 语句,并发上来了,主库卡死</p>
-<p>通过pt-kill杀掉僵死的sql,但是并没有好转</p>
-<p>如果这个时候切换主库,会不会把新主库搞死呢,所以没有切换主库</p>
-<p>最后找出请求数据库比较多的IP,把这个IP的权限下掉,等数据库恢复后,在把权限加上</p>
-<p>这也算是一种熔断措施了</p>
-<p><strong>服务限流</strong></p>
-<p>还是上面的那个事情,首先业务把insert into on update dumplicate key语句改掉了</p>
-<p>另外业务开发能力比较强,自己实现了和tcp滑动窗口原理类似的组件来访问数据库</p>
-<p>当发现数据库的延时增加的时候,就相应的减少对数据库的请求</p>
-<p>这也算是一种服务限流了</p>
+                <p><a href="https://mp.weixin.qq.com/s?src=11&amp;timestamp=1555909877&amp;ver=1561&amp;signature=3UeyXqK8xnftSN0khe24OFHbO**QvmvCjru9Zx1tNSu08i9HeMGQmkUT5KTe-ch5rxI6fHZ37vtf4IPgaL3T92uUtiuMAIKmBf0XYIgMzyGkfxsfD7d-KjL90D5mwFdm&amp;new=1" target="_blank" rel="noopener">MySQL 大量sleeping before entering InnoDB 故障诊断(innodb_thread_concurrency)</a></p>
+<p><a href="http://blog.itpub.net/22664653/viewspace-1158547/" target="_blank" rel="noopener">table_id 导致数据丢失(table-cache-size)</a>     </p>
+<p><a href="https://www.ywnds.com/?p=8129" target="_blank" rel="noopener">MySQL基于MHA高可用部署篇（GTID模式）</a></p>
+<p><a href="https://www.ywnds.com/?p=10431" target="_blank" rel="noopener">MySQL InnoDB故障恢复流程</a></p>
+<p><a href="https://blog.csdn.net/n88lpo/article/details/79910203" target="_blank" rel="noopener">MHA选择主库源码解析</a></p>
+<p><a href="https://blog.csdn.net/wanbf123/article/details/80697787" target="_blank" rel="noopener">mysql锁——元数据锁和innodb锁</a></p>
+<p><a href="http://xiezhenye.com/2015/12/mysql-relay_log_purge0-%E6%97%B6%E7%9A%84%E9%A3%8E%E9%99%A9.html" target="_blank" rel="noopener">MySQL relay_log_purge=0 时的风险</a></p>
+<p><a href="https://yq.aliyun.com/articles/138743" target="_blank" rel="noopener">MySQL如何对主从数据不一致的情况进行校验并继续同步</a></p>
 
 
                 <hr>
@@ -255,13 +207,9 @@
 
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/12/11/crawl-percona-blog/" data-toggle="tooltip" data-placement="top" title="爬取percona博客">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/11/16/life-conference/" data-toggle="tooltip" data-placement="top" title="有效会议之我见">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2019/01/14/linux-optimize/" data-toggle="tooltip" data-placement="top" title="tcp文章集锦">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -326,8 +274,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/11/23/microservice-and-mysql/";
-    var disqus_url = "http:/2018/11/23/microservice-and-mysql/";
+    var disqus_identifier = "http:/2019/01/14/mysql-knowledge/";
+    var disqus_url = "http:/2019/01/14/mysql-knowledge/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
