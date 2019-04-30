@@ -13,11 +13,11 @@
 
     <title>
         
-          MySQL锁文章相关汇总 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          Golang程序输出版本信息 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/06/10/mysql-lock/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2018/09/19/golang-project-version/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -165,14 +165,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#golang" title="golang">golang</a>
                         
                     </div>
-                    <h1>MySQL锁文章相关汇总</h1>
+                    <h1>Golang程序输出版本信息</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-06-10
+                        2018-09-19
                     </span>
                 </div>
             </div>
@@ -191,37 +191,28 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><a href="http://www.cainiaoxueyuan.com/sjk/10007.html" target="_blank" rel="noopener">mysql排查死锁，不是你想象中的那么简单…</a></p>
-<p><a href="http://www.cainiaoxueyuan.com/sjk/10007.html" target="_blank" rel="noopener">mysql数据库锁，为什么开发人员要熟悉了解</a></p>
-<p><a href="http://hedengcheng.com/?p=771#_Toc374698317" target="_blank" rel="noopener">MySQL 加锁处理分析</a></p>
-<p><a href="http://hedengcheng.com/?p=844" target="_blank" rel="noopener">一个最不可思议的MySQL死锁分析</a></p>
-<p><a href="https://mp.weixin.qq.com/s?src=11&amp;timestamp=1555677604&amp;ver=1556&amp;signature=H9*asJ7KyQxn41Y5420bSZDxVIR*d94X0bjh58IuAYsE5ZBoqIbBB6r24eN-rDBHAQ-atVdJrCtXGU1Rm5*ZyQCkTqj-YMrdSRKH5iulmvtyefmtfx0nGl1a8Rl6pGH*&amp;new=1" target="_blank" rel="noopener">抱歉，没早点把这么全面的InnoDB锁机制发给你</a></p>
-<p><a href="http://www.cainiaoxueyuan.com/sjk/4569.html" target="_blank" rel="noopener">MySQL锁机制与实践：做有逼格的dba</a></p>
-<p><a href="http://blog.itpub.net/22664653/viewspace-2145736/" target="_blank" rel="noopener">漫谈死锁(杨奇龙系列文章)</a></p>
-<p><a href="https://blog.csdn.net/wanbf123/article/details/80697787" target="_blank" rel="noopener">mysql锁——元数据锁和innodb锁</a></p>
-<p>insert操作加什么锁?</p>
-<blockquote>
-<p><strong>INSERT sets an exclusive lock on the inserted row</strong>. This lock is an index-record lock, not a next-key lock (that is, there is no gap lock) and does not prevent other sessions from inserting into the gap before the inserted row.</p>
-<p><strong>Prior to inserting the row, a type of gap lock called an insert intention gap lock is set</strong>. This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap. Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6 each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.</p>
-<p><strong>If a duplicate-key error occurs, a shared lock on the duplicate index record is set.</strong> This use of a shared lock can result in deadlock should there be multiple sessions trying to insert the same row if another session already has an exclusive lock. This can occur if another session deletes the row. Suppose that an InnoDB table t1 has the following structure:</p>
-</blockquote>
-<p><strong>insert 的加锁方式</strong><br>对于并发insert造成唯一键冲突的时候 insert的加锁策略是 </p>
-<blockquote>
-<ol>
-<li>第一阶段 唯一性约束检查，先申请LOCK_S + LOCK_ORDINARY</li>
-<li>第二阶段 获取阶段一的锁并且insert成功之后,插入的位置有Gap锁:LOCK_INSERT_INTENTION,为了防止其他insert 唯一键冲突。</li>
-<li>新数据插入:LOCK_X + LOCK_REC_NOT_GAP</li>
-<li>对于insert操作来说，若发生唯一约束冲突，则需要对冲突的唯一索引加上S Next-key Lock。从这里会发现，即使是RC事务隔离级别，也同样会存在Next-Key Lock锁，从而阻塞并发。然而，文档没有说明的是，对于检测到冲突的唯一索引，等待线程在获得S Lock之后，还需要对下一个记录进行加锁，在源码中由函数row_ins_scan_sec_index_for_duplicate进行判断</li>
-</ol>
-</blockquote>
-<p><strong>delete 的加锁方式</strong></p>
-<blockquote>
-<p>1 在非唯一索引的情况下，删除一条存在的记录是有gap锁，锁住记录本身和记录之前的gap</p>
-<p>2 在唯一索引和主键的情况下删除一条存在的记录，因为都是唯一值，进行删除的时候，是不会有gap存在</p>
-<p>3 非唯一索引，唯一索引和主键在删除一条不存在的记录，均会在这个区间加gap锁</p>
-<p>4 通过非唯一索引和唯一索引去删除一条标记为删除的记录的时候，都会请求该记录的行锁，同时锁住记录之前的gap</p>
-<p>5 RC 情况下是没有gap锁的，除了遇到唯一键冲突的情况，如插入唯一键冲突。</p>
-</blockquote>
+                <p>我们说写程序一定要有规范</p>
+<p>我认为写golang程序,能够查看程序的版本号就算一个规范</p>
+<p>mysql ,redis等开源程序都能查看版本号</p>
+<p>通过不同版本号,我们能知道这个版本的程序有什么新的特性,修复了哪些bug</p>
+<p>那么在golang中我们如何做,能够查看版本号呢?</p>
+<p>答案是通过 go build -ldflags “-X “</p>
+<hr>
+<p>链接器具有设置未初始化字符串变量的值的选项：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-X importpath.name=value</span><br><span class="line">    <span class="built_in">Set</span> the value <span class="keyword">of</span> the string variable <span class="keyword">in</span> importpath named name to value.</span><br><span class="line">    Note that before Go <span class="number">1.5</span> <span class="keyword">this</span> option took two separate <span class="built_in">arguments</span>.</span><br><span class="line">    Now it takes one argument split on the first = sign.</span><br></pre></td></tr></table></figure>
+<p>作为构建过程的一部分，可以使用此方法设置版本字符串变量。可以通过<code>go</code>工具使用<code>-ldflags</code></p>
+<p>例如，给定以下源文件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> xyz string</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    fmt.Println(xyz)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ go run -ldflags <span class="string">"-X main.xyz=abc"</span> main.go</span><br><span class="line">abc</span><br></pre></td></tr></table></figure>
+<hr>
+<p>一般我们怎么操作呢?</p>
+<p>有一个专门的<code>version.go</code>文件,包含如下内容</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">var</span> (</span><br><span class="line">    gitTag       <span class="keyword">string </span>= <span class="string">""</span></span><br><span class="line">    gitCommit    <span class="keyword">string </span>= <span class="string">"$Format:%H$"</span></span><br><span class="line">    gitTreeState <span class="keyword">string </span>= <span class="string">"not a git tree"</span></span><br><span class="line">    <span class="keyword">buildDate </span>   <span class="keyword">string </span>= <span class="string">"1970-01-01T00:00:00Z"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>在makefile中加入下面的信息</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">buildDate=<span class="variable">$(<span class="built_in">shell</span> date '+%Y-%m-%d %H:%M:%S')</span></span><br><span class="line">gitCommit=<span class="variable">$(<span class="built_in">shell</span> git log --pretty=format:'%H' -n 1)</span></span><br><span class="line">gitTag=<span class="variable">$(<span class="built_in">shell</span> <span class="built_in">if</span> [ "`git describe --tags --abbrev=0 2&gt;/dev/null`" != "" ];then git describe --tags --abbrev=0; else git log --pretty=format:'%h' -n 1; fi)</span></span><br><span class="line">gitTreeState = <span class="variable">$(<span class="built_in">shell</span> <span class="built_in">if</span> git status|grep -q 'clean';then echo clean; else echo dirty; fi)</span></span><br><span class="line"></span><br><span class="line">LDFLAGS += -X <span class="string">"main.buildDate=$&#123;buildDate&#125;"</span></span><br><span class="line">LDFLAGS += -X <span class="string">"main.gitCommit=$&#123;gitCommit&#125;"</span></span><br><span class="line">LDFLAGS += -X <span class="string">"main.gitTag=$&#123;gitTag&#125;"</span></span><br><span class="line">LDFLAGS += -X <span class="string">"main.gitTreeState=$&#123;gitTreeState&#125;"</span></span><br><span class="line"></span><br><span class="line">GOBULID = go build -ldflags '<span class="variable">$(LDFLAGS)</span>' -o $&#123;PROJECT&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们执行<code>make</code>命令的时候,就会把相关的信息添加到编译后的二进制文件中</p>
+<p>当然版本显示哪些内容,每个人需要根据自己的需要进行设置</p>
 
 
                 <hr>
@@ -231,12 +222,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/06/14/mysql-innodb-trx-and-lock/" data-toggle="tooltip" data-placement="top" title="Innodb事务与锁">&larr; Previous Post</a>
+                            <a href="/songshiqiang.github.io/2018/09/19/linux-low-kerner-version-problem/" data-toggle="tooltip" data-placement="top" title="Linux内核太低导致机器性能下降10倍">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/05/14/mysql-binlog-problems/" data-toggle="tooltip" data-placement="top" title="Binlog相关常见问题整理">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2018/09/19/golang-pointer/" data-toggle="tooltip" data-placement="top" title="Golang何时该使用指针">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -269,7 +260,7 @@
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#golang" title="golang">golang</a>
                         
                     </div>
                 </section>
@@ -301,8 +292,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/06/10/mysql-lock/";
-    var disqus_url = "http:/2018/06/10/mysql-lock/";
+    var disqus_identifier = "http:/2018/09/19/golang-project-version/";
+    var disqus_url = "http:/2018/09/19/golang-project-version/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -13,11 +13,11 @@
 
     <title>
         
-          elasticsearch文章集锦 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          MySQL响应时间变慢 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/12/14/elasticsearch-knowledge/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2019/01/14/mysql-slow/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -90,13 +90,6 @@
 
                         
                         <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -105,6 +98,13 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -165,14 +165,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#elasticsearch" title="elasticsearch">elasticsearch</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
                         
                     </div>
-                    <h1>elasticsearch文章集锦</h1>
+                    <h1>MySQL响应时间变慢</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-12-14
+                        2019-01-14
                     </span>
                 </div>
             </div>
@@ -191,7 +191,38 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><a href="https://blog.csdn.net/xialei199023/article/details/48227247" target="_blank" rel="noopener">搜索引擎Elasticsearch查询学习</a></p>
+                <p>排查思路 </p>
+<ol>
+<li>确定高负载的类型,top命令看负载高是CPU还是IO。 （CPU占用时间长，IO查询交互较多）</li>
+<li>检查慢查询日志，如果前端上了新代码，可能是慢查询引起负载高。 </li>
+<li>检查硬件问题，是否磁盘故障问题造成的。 </li>
+<li>检查监控平台，对比此机器不同时间的负载。 </li>
+</ol>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dstat -l -m -r -c  --<span class="built_in">top</span>-io --<span class="built_in">top</span>-mem --<span class="built_in">top</span>-cpu</span><br><span class="line">htop/<span class="built_in">top</span></span><br><span class="line">iostat -xk <span class="number">1</span></span><br><span class="line">dmesg</span><br><span class="line">iotop</span><br><span class="line">pt-ioprofile</span><br></pre></td></tr></table></figure>
+<h4 id="慢查询"><a href="#慢查询" class="headerlink" title="慢查询"></a>慢查询</h4><p>大多数情况下MySQL响应时间变慢都是由于慢查询导致的</p>
+<p>show processlist </p>
+<p>查看是否有大量的查询处于不好的状态,比如copying to tmp table on disk,sending data等等</p>
+<p>这个时候,你可以使用pt-kill杀掉这些链接,然后就是进行慢查询的优化了</p>
+<p>有时候通过show processlist 并不一定能抓住现场,这个时候就要分析slowlog了</p>
+<p>有时候slowlog不一定能查到东西,可能是因为有大量的查询时间在200ms,但是慢查询时间设置为500ms,这个时候我们把慢查询时间设置短点,在继续观察一下</p>
+<h4 id="query-cache"><a href="#query-cache" class="headerlink" title="query cache"></a>query cache</h4><p>show processlist </p>
+<p>也有可能你能看到有些查询处于waitting for query cache状态</p>
+<p>这个时候,你就需要关闭query cache了</p>
+<h4 id="缓存失效导致大量链接打到数据库"><a href="#缓存失效导致大量链接打到数据库" class="headerlink" title="缓存失效导致大量链接打到数据库"></a>缓存失效导致大量链接打到数据库</h4><p>通过show engine innodb status查看当前事务状态</p>
+<p>通过合理设置innodb_thread_concurrency参数可以适当减小缓存失效对数据库的影响</p>
+<p>也可能是秒杀类似的业务比如聚划算10点开团或者双十一秒杀,瞬时海量访问给数据库带来冲击</p>
+<h4 id="innodb-stats-on-metadata"><a href="#innodb-stats-on-metadata" class="headerlink" title="innodb_stats_on_metadata"></a>innodb_stats_on_metadata</h4><p>可以参考这篇文章</p>
+<p><a href="https://dinglin.iteye.com/blog/1575840" target="_blank" rel="noopener">关于 innodb_stats_on_metadata 的设置问题</a></p>
+<h4 id="大量的tcp链接处于不正常状态"><a href="#大量的tcp链接处于不正常状态" class="headerlink" title="大量的tcp链接处于不正常状态"></a>大量的tcp链接处于不正常状态</h4><p>比如是否有大量time_wait tcp链接</p>
+<h4 id="数据库卡住"><a href="#数据库卡住" class="headerlink" title="数据库卡住"></a>数据库卡住</h4><p>可以通过strace 或 pstack 查看数据库卡在什么地方</p>
+<h4 id="数据库的QPS-TPS变高"><a href="#数据库的QPS-TPS变高" class="headerlink" title="数据库的QPS/TPS变高"></a>数据库的QPS/TPS变高</h4><p>通过监控判断</p>
+<h4 id="硬件问题"><a href="#硬件问题" class="headerlink" title="硬件问题"></a>硬件问题</h4><p>磁盘写入方式改变 比如由writeback 变为 write through<br>RAID卡都有写cache(Battery Backed Write Cache),写cache对IO性能的提升非常明显,因为掉电会丢失数据,所以必须由电池提供支持。<br>电池会定期充放电,一般为90天左右,当发现电量低于某个阀值时,会将写cache策略从writeback置为writethrough,相当于写cache会失效,这时如果系统有大量的IO操作,可能会明显感觉到IO响应速度变慢,cpu 队列堆积系统load 飙高。</p>
+<h4 id="网卡软中断"><a href="#网卡软中断" class="headerlink" title="网卡软中断"></a>网卡软中断</h4><p><a href="http://blog.yufeng.info/archives/2037" target="_blank" rel="noopener">MYSQL数据库网卡软中断不平衡问题及解决方案</a></p>
+<p>参考</p>
+<p><a href="https://bobcares.com/blog/fix-mysql-high-cpu-usage/" target="_blank" rel="noopener">How to fix MySQL high CPU usage</a></p>
+<p><a href="https://www.cnblogs.com/lddbupt/p/5779655.html" target="_blank" rel="noopener">cpu load过高问题排查</a></p>
+<p><a href="https://blog.csdn.net/John_Chang11/article/details/52400080" target="_blank" rel="noopener">MySQL数据库负载很高的解决办法</a></p>
+<p><a href="https://www.ywnds.com/?p=9818" target="_blank" rel="noopener">MySQL主机CPU负载太高解决思路</a></p>
 
 
                 <hr>
@@ -200,13 +231,9 @@
 
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/songshiqiang.github.io/2019/01/14/golang-knowledge/" data-toggle="tooltip" data-placement="top" title="golang文章集锦">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/12/14/monitor/" data-toggle="tooltip" data-placement="top" title="谈谈监控">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2019/01/14/golang-knowledge/" data-toggle="tooltip" data-placement="top" title="golang文章集锦">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -239,7 +266,7 @@
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#elasticsearch" title="elasticsearch">elasticsearch</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
                         
                     </div>
                 </section>
@@ -271,8 +298,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/12/14/elasticsearch-knowledge/";
-    var disqus_url = "http:/2018/12/14/elasticsearch-knowledge/";
+    var disqus_identifier = "http:/2019/01/14/mysql-slow/";
+    var disqus_url = "http:/2019/01/14/mysql-slow/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

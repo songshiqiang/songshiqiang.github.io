@@ -13,11 +13,11 @@
 
     <title>
         
-          Redis文章集锦 - songshiqiang的博客 | songshiqiang&#39;s Blog
+          从别的角度说说MySQL高可用 - songshiqiang的博客 | songshiqiang&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http:/songshiqiang.github.io/2018/10/10/redis-knowledge/">
+    <link rel="canonical" href="http:/songshiqiang.github.io/2018/12/14/mysql-high-available/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/songshiqiang.github.io/css/bootstrap.min.css">
@@ -90,13 +90,6 @@
 
                         
                         <li>
-                            <a href="/songshiqiang.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/songshiqiang.github.io/about/">About</a>
                         </li>
                         
@@ -105,6 +98,13 @@
                         
                         <li>
                             <a href="/songshiqiang.github.io/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/songshiqiang.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -165,14 +165,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/songshiqiang.github.io/tags/#redis" title="redis">redis</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
                         
                     </div>
-                    <h1>Redis文章集锦</h1>
+                    <h1>从别的角度说说MySQL高可用</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by songshiqiang on
-                        2018-10-10
+                        2018-12-14
                     </span>
                 </div>
             </div>
@@ -191,11 +191,81 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><a href="https://yq.aliyun.com/articles/531067" target="_blank" rel="noopener">阿里云Redis开发规范</a></p>
-<p><a href="https://mp.weixin.qq.com/s?src=11&amp;timestamp=1556010110&amp;ver=1563&amp;signature=JUne*ZxC*18n49lx2C4lCeyLQtI7PA-k*-Pnklq9cekug3*4FRduARv0T9oeLrd4QBmJ5IjYVVShz39kGNlCBrldeaR1zE8qCs-RWjt5UusvAERKjDtRxL3ut1emKQ6L&amp;new=1" target="_blank" rel="noopener">Redis运行时的10大重要指标</a></p>
-<p><a href="https://www.ywnds.com/?p=5633" target="_blank" rel="noopener">Redis在唯品会的大规模应用</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/33054749" target="_blank" rel="noopener">Redis深入之道——Redis4.0、读写分离技术揭秘及实战应用</a></p>
-<p><a href="https://blog.csdn.net/zeb_perfect/article/details/54135506" target="_blank" rel="noopener">缓存穿透，缓存击穿，缓存雪崩解决方案分析</a></p>
+                <p>我们常说的MySQL高可用方案指的是下面的几类</p>
+<h4 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h4><p>主从切换工具一般比较多的就是MHA</p>
+<h4 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h4><p>阿里云的PolarDB就属于这一类</p>
+<h4 id="DRBD磁盘复制"><a href="#DRBD磁盘复制" class="headerlink" title="DRBD磁盘复制"></a>DRBD磁盘复制</h4><p>国内应该没有使用的吧</p>
+<h4 id="cluster"><a href="#cluster" class="headerlink" title="cluster"></a>cluster</h4><p>MariaDB Galera Cluster,Percona XtraDB Cluster,MySQL Group Replicate算这一类</p>
+<hr>
+<p>但是SLA光靠上面的MySQL高可用方案是完不成的,他们可以保证数据不丢失或少丢失</p>
+<p>如果客户端链接数据库这一条链路断了,SLA 5个9也就达不到了</p>
+<p>这里说一说主从复制下遇到如下问题时,各种客户端链接方式的优缺点</p>
+<ul>
+<li>数据库/机器机器故障</li>
+<li>机房/交换机故障</li>
+<li>正常切主</li>
+<li>数据库拆分</li>
+</ul>
+<h4 id="直接链接串里配置物理IP"><a href="#直接链接串里配置物理IP" class="headerlink" title="直接链接串里配置物理IP"></a>直接链接串里配置物理IP</h4><p>主从复制,上面的四种情况都无法良好应对,都需要应用修改配置,重启</p>
+<h4 id="VIP-主从复制-MHA"><a href="#VIP-主从复制-MHA" class="headerlink" title="VIP(主从复制+MHA)"></a>VIP(主从复制+MHA)</h4><ul>
+<li>数据库/机器机器故障</li>
+</ul>
+<p>能比较好的处理,公司有运行好几年不需要变动的数据库集群</p>
+<p>但是在集群规模比较大的时候,CMDB系统要做好</p>
+<ul>
+<li>正常切主</li>
+</ul>
+<p>也需要业务中断几秒甚至更长</p>
+<ul>
+<li>其他二种情况</li>
+</ul>
+<p>应对不了,需要应用修改配置,重启</p>
+<h4 id="DNS-zookeeper等"><a href="#DNS-zookeeper等" class="headerlink" title="DNS/zookeeper等"></a>DNS/zookeeper等</h4><p>依赖公司基础设施完善</p>
+<p>DNS的改动能快速传输到全部内网,我遇到过DNS改动需要好几分钟才传输到全内网,这样的话,DNS肯定不行</p>
+<p>使用zookeeper的话,需要应用的支持</p>
+<ul>
+<li>数据库/机器机器故障</li>
+<li>机房/交换机故障</li>
+</ul>
+<p>​            这2中情况需要第三方工具检测并更改DNS配置</p>
+<ul>
+<li><p>正常切主</p>
+<p>通过设置auto_increment_increment和auto_increment_offset做成双主,除非业务能保证多点写入,数据不冲突</p>
+<p>DBA更改DNS配置</p>
+<p>需要注意长连接的影响</p>
+<p>麻烦程度:比较麻烦</p>
+</li>
+<li><p>数据库拆分</p>
+<p>通过设置auto_increment_increment和auto_increment_offset做成双主,除非业务能保证多点写入,数据不冲突</p>
+<p>需要应用改配置</p>
+<p>需要注意长连接的影响</p>
+<p>麻烦程度:比较麻烦</p>
+</li>
+</ul>
+<h4 id="proxy"><a href="#proxy" class="headerlink" title="proxy"></a>proxy</h4><p>proxy可能是一个单点和瓶颈点</p>
+<ul>
+<li><p>数据库/机器机器故障</p>
+</li>
+<li><p>机房/交换机故障</p>
+<p>这2中情况需要第三方工具检测并更改proxy配置</p>
+</li>
+<li><p>正常切主</p>
+<p>不需要设置auto_increment_increment和auto_increment_offset做双主</p>
+<p>可以秒级切主</p>
+<p>麻烦程度:简单</p>
+</li>
+<li><p>数据库拆分</p>
+<p>不需要设置auto_increment_increment和auto_increment_offset做双主</p>
+<p>可以秒级切主</p>
+<p>麻烦程度:简单</p>
+</li>
+</ul>
+<hr>
+<p>主从复制架构下,比较理想的应该是github这种了</p>
+<p><a href="https://www.infoq.cn/article/mysql-high-availability-at-github" target="_blank" rel="noopener">GitHub 的 MySQL 高可用性实践</a></p>
+<p>参考</p>
+<p><a href="https://juejin.im/post/5be24e85e51d451c6a14c406" target="_blank" rel="noopener">如何设计和实现高可用的MySQL</a></p>
+<p><a href="https://www.cnblogs.com/cchust/p/5450510.html" target="_blank" rel="noopener">MySQL高可用方案</a></p>
 
 
                 <hr>
@@ -205,12 +275,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/songshiqiang.github.io/2018/10/10/mysql-varchar/" data-toggle="tooltip" data-placement="top" title="为什么说varchar需要多少申请多少">&larr; Previous Post</a>
+                            <a href="/songshiqiang.github.io/2018/12/14/monitor/" data-toggle="tooltip" data-placement="top" title="谈谈监控">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/songshiqiang.github.io/2018/09/19/golang-pointer/" data-toggle="tooltip" data-placement="top" title="Golang何时该使用指针">Next Post &rarr;</a>
+                            <a href="/songshiqiang.github.io/2018/12/14/IT-blogs/" data-toggle="tooltip" data-placement="top" title="IT技术大佬博客汇总">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -243,7 +313,7 @@
                     <h5><a href="/songshiqiang.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/songshiqiang.github.io/tags/#redis" title="redis">redis</a>
+                          <a class="tag" href="/songshiqiang.github.io/tags/#MySQL" title="MySQL">MySQL</a>
                         
                     </div>
                 </section>
@@ -275,8 +345,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "sq892246139";
-    var disqus_identifier = "http:/2018/10/10/redis-knowledge/";
-    var disqus_url = "http:/2018/10/10/redis-knowledge/";
+    var disqus_identifier = "http:/2018/12/14/mysql-high-available/";
+    var disqus_url = "http:/2018/12/14/mysql-high-available/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
