@@ -184,57 +184,6 @@
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2019/01/14/mysql-slow/">
-        <h2 class="post-title">
-            MySQL响应时间变慢
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            排查思路 
-
-确定高负载的类型,top命令看负载高是CPU还是IO。 （CPU占用时间长，IO查询交互较多）
-检查慢查询日志，如果前端上了新代码，可能是慢查询引起负载高。 
-检查硬件问题，是否磁盘故障问题造成的。 
-检查监控平台，对比此机器不同时间的负载。 
-
-123456dstat -l -m -r -c  --top-io --top-mem --top-cpuhtop/topiosta......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2019-01-14
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2019/01/14/golang-knowledge/">
-        <h2 class="post-title">
-            golang文章集锦
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Go语言构建千万级在线的高并发消息推送系统实践
-2017年超有价值的Golang文章
-...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2019-01-14
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/songshiqiang.github.io/2019/01/14/linux-optimize/">
         <h2 class="post-title">
             tcp文章集锦
@@ -266,22 +215,54 @@ TCP-Keepalive-HOWTO
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2019/01/14/mysql-knowledge/">
+    <a href="/songshiqiang.github.io/2019/01/14/mysql-slow/">
         <h2 class="post-title">
-            MySQL文章集锦
+            MySQL响应时间变慢
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            参数影响
-MySQL 大量sleeping before entering InnoDB 故障诊断(innodb_thread_concurrency)table_id 导致数据丢失(table-cache-size)MySQL relay_log_purge=0 时的风险numa导致MySQL使用swap
-特性介绍mysql锁——元数据锁和innodb锁MySQL InnoDB故障恢复流程......
+            排查思路 
+
+确定高负载的类型,top命令看负载高是CPU还是IO。 （CPU占用时间长，IO查询交互较多）
+检查慢查询日志，如果前端上了新代码，可能是慢查询引起负载高。 
+检查硬件问题，是否磁盘故障问题造成的。 
+检查监控平台，对比此机器不同时间的负载。 
+
+123456dstat -l -m -r -c  --top-io --top-mem --top-cpuhtop/topiosta......
         </div>
     </a>
     <p class="post-meta">
         Posted by songshiqiang on
         2019-01-14
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/12/14/mysql-high-available/">
+        <h2 class="post-title">
+            从别的角度说说MySQL高可用
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            我们常说的MySQL高可用方案指的是下面的几类
+主从复制主从切换工具一般比较多的就是MHA
+共享存储阿里云的PolarDB就属于这一类
+DRBD磁盘复制国内应该没有使用的吧
+clusterMariaDB Galera Cluster,Percona XtraDB Cluster,MySQL Group Replicate算这一类
+
+但是SLA光靠上面的MySQL高可用方案是完不成的,他们可以......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-12-14
     </p>
 
 </div>
@@ -322,53 +303,27 @@ elasticsearch配合上grafana是我感觉使用起来最得劲的一个了
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2018/12/14/mysql-high-available/">
+    <a href="/songshiqiang.github.io/2018/12/11/sre-tools/">
         <h2 class="post-title">
-            从别的角度说说MySQL高可用
+            运维办公工具集
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            我们常说的MySQL高可用方案指的是下面的几类
-主从复制主从切换工具一般比较多的就是MHA
-共享存储阿里云的PolarDB就属于这一类
-DRBD磁盘复制国内应该没有使用的吧
-clusterMariaDB Galera Cluster,Percona XtraDB Cluster,MySQL Group Replicate算这一类
-
-但是SLA光靠上面的MySQL高可用方案是完不成的,他们可以......
+            工作至今,我觉得比较好的工作用品
+一台笔记本和一个显示器经历过只有一台笔记本,或者只有一个台式机+显示器,还有一台笔记本+一个显示器
+觉得最好的就是笔记本+显示器了
+笔记本用来处理邮件,微信等沟通信息,还可以开会的时候,随身携带
+显示器上则可以编码或者登录线上机器处理线上问题
+笔记本屏幕最好放在和视线水平的位置,防止出现颈椎病
+一个靠背程序员长时间做在电脑桌前,一定要注意自己的腰和颈椎
+买一......
         </div>
     </a>
     <p class="post-meta">
         Posted by songshiqiang on
-        2018-12-14
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/12/14/IT-blogs/">
-        <h2 class="post-title">
-            IT技术大佬博客汇总
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            唐刘-pingcap首席架构师
-白明(前东软技术总监)
-丁奇
-鸟窝
-运维那点事-已经汇总一次了
-severalnines
-...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-12-14
+        2018-12-11
     </p>
 
 </div>
@@ -390,34 +345,6 @@ severalnines
 自己写一个下载脚本,把所有博客全部下载下来
 1#本脚本使用python3
 1234567891......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-12-11
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/12/11/sre-tools/">
-        <h2 class="post-title">
-            运维办公工具集
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            工作至今,我觉得比较好的工作用品
-一台笔记本和一个显示器经历过只有一台笔记本,或者只有一个台式机+显示器,还有一台笔记本+一个显示器
-觉得最好的就是笔记本+显示器了
-笔记本用来处理邮件,微信等沟通信息,还可以开会的时候,随身携带
-显示器上则可以编码或者登录线上机器处理线上问题
-笔记本屏幕最好放在和视线水平的位置,防止出现颈椎病
-一个靠背程序员长时间做在电脑桌前,一定要注意自己的腰和颈椎
-买一......
         </div>
     </a>
     <p class="post-meta">
@@ -453,6 +380,90 @@ James Lewis 和 Martin Fowler关于微服务架构的定义,有以下几点：
     <p class="post-meta">
         Posted by songshiqiang on
         2018-11-23
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/11/16/life-conference/">
+        <h2 class="post-title">
+            有效会议之我见
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            会议沟通在工作中不可避免.
+有人抱怨有太多的无效会议,占据了自己太多的工作时间.
+在这里我想讨论的是20人左右团队(在大公司大概是一个经理带的团队)的会议沟通
+
+好吧,其实我经历过20左右的团队,经理只带着4-5个人的组长开会.
+个人感觉,这样是不合适的.因为组长不一定会和组员开会,组长也不一定能准确表述经理的意思.
+其实20多人的会议,经理是完全可以高效的组织起来的.
+先推荐一篇好文
+看看......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-11-16
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/11/15/linux-delete/">
+        <h2 class="post-title">
+            文件删除空间未释放
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            备份导致删库后磁盘空间不释放收到报警,磁盘空间小于%2
+一顿查找,发现有些已经拆分出去不在使用的数据库占用了很大的磁盘空间
+那就开始删除这些数据库吧
+drop database  drop  table …….
+删除完了,在看一看磁盘空间大小
+咦,怎么还是98%,刚刚删除的明明有500G数据嘛
+怎么回事?
+哈哈,看到这里,经验丰富的应该知道了,这些数据库被别的进程占用了,最有可能的进程就是备......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-11-15
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/10/10/mysql-varchar/">
+        <h2 class="post-title">
+            为什么说varchar需要多少申请多少
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在数据库开发规范中,我们一般要求varchar(N),N只要符合长度要求即可,没有必要越大越好
+比如name字段,没有必要N=1000,没有人的名字那么长吧
+但是你可能会说,varchar(1000)中存放sq和varchar(10)存放sq,占用的字节长度一样的啊,为啥不能使用varchar(1000)呢?
+第一个原因:
+N越大,存储的空间可能越大
+From MySQL Manual:
+1......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-10-10
     </p>
 
 </div>
@@ -495,9 +506,7 @@ James Lewis 和 Martin Fowler关于微服务架构的定义,有以下几点：
                             
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="3">golang</a>
-                            
-                        
+                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="2">golang</a>
                             
                         
                             
@@ -507,9 +516,9 @@ James Lewis 和 Martin Fowler关于微服务架构的定义,有以下几点：
                             
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="11">MySQL</a>
-                            
                         
+                            
+                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="10">MySQL</a>
                             
                         
                             

@@ -184,90 +184,6 @@
 
 <div class="post-preview">
 
-    <a href="/songshiqiang.github.io/2018/11/16/life-conference/">
-        <h2 class="post-title">
-            有效会议之我见
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            会议沟通在工作中不可避免.
-有人抱怨有太多的无效会议,占据了自己太多的工作时间.
-在这里我想讨论的是20人左右团队(在大公司大概是一个经理带的团队)的会议沟通
-
-好吧,其实我经历过20左右的团队,经理只带着4-5个人的组长开会.
-个人感觉,这样是不合适的.因为组长不一定会和组员开会,组长也不一定能准确表述经理的意思.
-其实20多人的会议,经理是完全可以高效的组织起来的.
-先推荐一篇好文
-看看......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-11-16
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/11/15/linux-delete/">
-        <h2 class="post-title">
-            文件删除空间未释放
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            备份导致删库后磁盘空间不释放收到报警,磁盘空间小于%2
-一顿查找,发现有些已经拆分出去不在使用的数据库占用了很大的磁盘空间
-那就开始删除这些数据库吧
-drop database  drop  table …….
-删除完了,在看一看磁盘空间大小
-咦,怎么还是98%,刚刚删除的明明有500G数据嘛
-怎么回事?
-哈哈,看到这里,经验丰富的应该知道了,这些数据库被别的进程占用了,最有可能的进程就是备......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-11-15
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/songshiqiang.github.io/2018/10/10/mysql-varchar/">
-        <h2 class="post-title">
-            为什么说varchar需要多少申请多少
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            在数据库开发规范中,我们一般要求varchar(N),N只要符合长度要求即可,没有必要越大越好
-比如name字段,没有必要N=1000,没有人的名字那么长吧
-但是你可能会说,varchar(1000)中存放sq和varchar(10)存放sq,占用的字节长度一样的啊,为啥不能使用varchar(1000)呢?
-第一个原因:
-N越大,存储的空间可能越大
-From MySQL Manual:
-1......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by songshiqiang on
-        2018-10-10
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/songshiqiang.github.io/2018/09/19/linux-low-kerner-version-problem/">
         <h2 class="post-title">
             Linux内核太低导致机器性能下降10倍
@@ -453,6 +369,87 @@ From the definition, Group Replication......
 </div>
 <hr>
 
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/06/14/mysql-innodb-trx-and-lock/">
+        <h2 class="post-title">
+            Innodb事务与锁
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            本文节选&lt;数据库事务处理的艺术:事务管理与并发控制&gt;
+
+InnoDB使用锁和MVCC技术实现了并发事务的访问并发控制。
+其中，锁是并发控制的基础，在此基础上，实现了MVCC机制，用以提高基于锁的方式带来的低效问题，使得读-写、写-读两种操作互不阻塞，提高了单纯基于锁技术的并发效率。
+SELECT操作在“REPEATABLE READ”和“READ COM-MITTED”级别下，使......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-06-14
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/06/10/mysql-lock/">
+        <h2 class="post-title">
+            MySQL锁文章相关汇总
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            mysql排查死锁，不是你想象中的那么简单…
+mysql数据库锁，为什么开发人员要熟悉了解
+MySQL 加锁处理分析
+一个最不可思议的MySQL死锁分析
+抱歉，没早点把这么全面的InnoDB锁机制发给你
+MySQL锁机制与实践：做有逼格的dba
+漫谈死锁(杨奇龙系列文章)
+mysql锁——元数据锁和innodb锁
+insert操作加什么锁?
+
+INSERT sets an exclusive......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-06-10
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/songshiqiang.github.io/2018/05/14/mysql-binlog-problems/">
+        <h2 class="post-title">
+            Binlog相关常见问题整理
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            MySQL高可用架构中，主库复制是非常常见的一种。当主库宕机后，可以提升一个从库作为新的主库，保证服务可用性；同时可以通过扩展从库，提高整个集群的QPS。在主从复制架构下，MySQL通过binlog来实现主从数据的一致性。
+ 
+如上图，MySQL主从复制主要有以下步骤  
+(1) master将改变记录到binary log中
+(2) slave io_thread去请求主库的binlog，......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by songshiqiang on
+        2018-05-14
+    </p>
+
+</div>
+<hr>
+
 
 
 <!-- Pager -->
@@ -494,9 +491,7 @@ From the definition, Group Replication......
                             
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="3">golang</a>
-                            
-                        
+                            <a href="/songshiqiang.github.io/tags/#golang" title="golang" rel="2">golang</a>
                             
                         
                             
@@ -506,9 +501,9 @@ From the definition, Group Replication......
                             
                         
                             
-                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="11">MySQL</a>
-                            
                         
+                            
+                            <a href="/songshiqiang.github.io/tags/#MySQL" title="MySQL" rel="10">MySQL</a>
                             
                         
                             
